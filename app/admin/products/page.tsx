@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
-import { softDeleteProduct, toggleProductStatus } from "@/lib/actions";
 import { Plus, Package, Eye, Pencil, Trash2, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ToggleStatusButton, DeleteProductButton } from "@/components/admin/ProductActionButtons";
 
 import ProductSearch from "@/components/admin/ProductSearch";
 import QuickEditButton from "@/components/admin/QuickEditButton";
@@ -138,19 +138,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                         </div>
                       </td>
                       <td className="p-4">
-                        <form action={toggleProductStatus.bind(null, product.id)}>
-                          <button
-                            type="submit"
-                            className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-2.5 sm:py-1 text-xs sm:text-[11px] font-semibold rounded-full transition-all ${
-                              product.status === "PUBLISHED"
-                                ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/20"
-                                : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700"
-                            }`}
-                          >
-                            <span className={`h-1.5 w-1.5 sm:h-1.5 sm:w-1.5 shrink-0 rounded-full ${product.status === "PUBLISHED" ? "bg-emerald-500 animate-pulse" : "bg-gray-400 dark:bg-zinc-500"}`} />
-                            {product.status}
-                          </button>
-                        </form>
+                        <ToggleStatusButton productId={product.id} productName={product.name} currentStatus={product.status} />
                       </td>
                       <td className="p-4 font-semibold text-brand-dark dark:text-brand-light">
                         Rp {product.price.toLocaleString("id-ID")}
@@ -177,18 +165,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                         >
                           <Pencil className="w-5 h-5 sm:w-4 sm:h-4" />
                         </Link>
-                        <form
-                          action={softDeleteProduct.bind(null, product.id)}
-                          className="inline-block"
-                        >
-                          <button
-                            type="submit"
-                            className="inline-flex p-2.5 sm:p-2 text-brand-dark dark:text-brand-light hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900"
-                            title="Move to Trash"
-                          >
-                            <Trash2 className="w-5 h-5 sm:w-4 sm:h-4" />
-                          </button>
-                        </form>
+                        <DeleteProductButton productId={product.id} productName={product.name} />
                       </td>
                     </tr>
                   ))
@@ -228,19 +205,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                       </div>
                     </div>
 
-                    <form action={toggleProductStatus.bind(null, product.id)}>
-                      <button
-                        type="submit"
-                        className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full transition-all ${
-                          product.status === "PUBLISHED"
-                            ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                            : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300"
-                        }`}
-                      >
-                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${product.status === "PUBLISHED" ? "bg-emerald-500" : "bg-gray-400"}`} />
-                        {product.status}
-                      </button>
-                    </form>
+                    <ToggleStatusButton productId={product.id} productName={product.name} currentStatus={product.status} />
                   </div>
 
                   <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-dashed border-[#EAEAEA] dark:border-zinc-850">
@@ -260,15 +225,11 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                     >
                       <Pencil className="w-4 h-4" />
                     </Link>
-                    <form action={softDeleteProduct.bind(null, product.id)}>
-                      <button
-                        type="submit"
-                        className="inline-flex p-2 text-red-650 hover:bg-red-55 dark:hover:bg-red-500/10 rounded-lg border border-red-100 dark:border-red-950"
-                        title="Move to Trash"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </form>
+                    <DeleteProductButton 
+                      productId={product.id} 
+                      productName={product.name} 
+                      mobileClass="inline-flex p-2 text-red-650 hover:bg-red-55 dark:hover:bg-red-500/10 rounded-lg border border-red-100 dark:border-red-950" 
+                    />
                   </div>
                 </div>
               ))

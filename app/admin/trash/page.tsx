@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { restoreProduct, permanentlyDeleteProduct } from "@/lib/actions";
-import { Trash2, RotateCcw, AlertOctagon } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { RestoreProductButton, DestroyProductButton } from "@/components/admin/TrashActionButtons";
 
 const getPrimaryImage = (imagesStr: string) => {
   try {
@@ -49,56 +49,73 @@ export default async function TrashPage() {
         </div>
       ) : (
         <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm overflow-hidden border border-[#EAEAEA] dark:border-zinc-800 transition-colors duration-300">
-          <table className="w-full text-left border-collapse whitespace-nowrap">
-            <thead>
-              <tr className="bg-white dark:bg-zinc-900 text-xs text-brand-dark dark:text-brand-light border-b border-[#EAEAEA] dark:border-zinc-800 uppercase tracking-wider">
-                <th className="p-4 font-semibold pl-6">Product</th>
-                <th className="p-4 font-semibold">Deleted At</th>
-                <th className="p-4 font-semibold text-right pr-6">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {deletedProducts.map((product) => (
-                <tr key={product.id} className="border-b border-[#EAEAEA]/50 dark:border-zinc-800/50 last:border-0 hover:bg-red-50/30 dark:hover:bg-red-950/20 transition-colors">
-                  <td className="p-4 pl-6 flex items-center gap-4">
-                    <div className="w-10 h-10 relative rounded-lg overflow-hidden border border-[#EAEAEA] dark:border-zinc-700 bg-[#F5F5F5] dark:bg-zinc-800 shrink-0">
-                      <Image src={getPrimaryImage((product as any).images)} alt={product.name} fill className="object-cover opacity-50 grayscale" unoptimized />
-                    </div>
-                    <div>
-                      <div className="font-medium text-brand-dark dark:text-zinc-100 line-through decoration-[#999] dark:decoration-zinc-500">{product.name}</div>
-                      <div className="text-xs text-brand-dark dark:text-brand-light">{product.category}</div>
-                    </div>
-                  </td>
-                  <td className="p-4 text-sm text-brand-dark dark:text-brand-light">
+          {/* Desktop Table View */}
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="w-full text-left border-collapse whitespace-nowrap">
+              <thead>
+                <tr className="bg-white dark:bg-zinc-900 text-xs text-brand-dark dark:text-brand-light border-b border-[#EAEAEA] dark:border-zinc-800 uppercase tracking-wider">
+                  <th className="p-4 font-semibold pl-6">Product</th>
+                  <th className="p-4 font-semibold">Deleted At</th>
+                  <th className="p-4 font-semibold text-right pr-6">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm">
+                {deletedProducts.map((product) => (
+                  <tr key={product.id} className="border-b border-[#EAEAEA]/50 dark:border-zinc-800/50 last:border-0 hover:bg-red-50/30 dark:hover:bg-red-950/20 transition-colors">
+                    <td className="p-4 pl-6 flex items-center gap-4">
+                      <div className="w-10 h-10 relative rounded-lg overflow-hidden border border-[#EAEAEA] dark:border-zinc-700 bg-[#F5F5F5] dark:bg-zinc-800 shrink-0">
+                        <Image src={getPrimaryImage((product as any).images)} alt={product.name} fill className="object-cover opacity-50 grayscale" unoptimized />
+                      </div>
+                      <div>
+                        <div className="font-medium text-brand-dark dark:text-zinc-100 line-through decoration-[#999] dark:decoration-zinc-500">{product.name}</div>
+                        <div className="text-xs text-brand-dark dark:text-brand-light">{product.category}</div>
+                      </div>
+                    </td>
+                    <td className="p-4 text-sm text-brand-dark dark:text-brand-light">
+                      {new Date(product.updatedAt).toLocaleDateString("id-ID", {
+                        day: "numeric", month: "long", year: "numeric"
+                      })}
+                    </td>
+                    <td className="p-4 pr-6 text-right space-x-2">
+                      <RestoreProductButton productId={product.id} productName={product.name} />
+                      <DestroyProductButton productId={product.id} productName={product.name} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card List View */}
+          <div className="block sm:hidden divide-y divide-[#EAEAEA] dark:divide-zinc-800">
+            {deletedProducts.map((product) => (
+              <div key={product.id} className="p-4 flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 relative rounded-lg overflow-hidden border border-[#EAEAEA] dark:border-zinc-700 bg-[#F5F5F5] dark:bg-zinc-800 shrink-0">
+                    <Image src={getPrimaryImage((product as any).images)} alt={product.name} fill className="object-cover opacity-50 grayscale" unoptimized />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-sm text-brand-dark dark:text-zinc-100 line-through decoration-[#999] dark:decoration-zinc-500 break-words leading-tight">{product.name}</h4>
+                    <p className="text-xs text-brand-dark/60 dark:text-zinc-400 mt-1">{product.category}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between text-xs text-brand-dark/50 dark:text-zinc-500">
+                  <span className="font-bold uppercase tracking-wider">Deleted At</span>
+                  <span>
                     {new Date(product.updatedAt).toLocaleDateString("id-ID", {
                       day: "numeric", month: "long", year: "numeric"
                     })}
-                  </td>
-                  <td className="p-4 pr-6 text-right space-x-2">
-                    <form action={restoreProduct.bind(null, product.id)} className="inline-block mr-2">
-                      <button
-                        type="submit"
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 rounded-lg text-sm font-medium transition-colors"
-                      >
-                        <RotateCcw className="w-4 h-4" />
-                        Restore
-                      </button>
-                    </form>
-                    <form action={permanentlyDeleteProduct.bind(null, product.id)} className="inline-block">
-                      <button
-                        type="submit"
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-lg text-sm font-medium transition-colors"
-                        title="Permanent Delete"
-                      >
-                        <AlertOctagon className="w-4 h-4" />
-                        Destroy
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-end gap-2.5 pt-2.5 border-t border-dashed border-[#EAEAEA] dark:border-zinc-850">
+                  <RestoreProductButton productId={product.id} productName={product.name} />
+                  <DestroyProductButton productId={product.id} productName={product.name} />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

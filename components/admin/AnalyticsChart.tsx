@@ -16,7 +16,17 @@ export default function AnalyticsChart({ data }: AnalyticsChartProps) {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   
-  useEffect(() => setMounted(true), []);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   if (!mounted) {
     return <div style={{ height: 400, width: '100%' }} className="mt-6 flex items-center justify-center text-sm text-brand-dark/50 dark:text-brand-light/50">Memuat grafik...</div>;
@@ -40,11 +50,11 @@ export default function AnalyticsChart({ data }: AnalyticsChartProps) {
             dataKey="name" 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fill: "#999", fontSize: 12 }} 
+            tick={isMobile ? false : { fill: "#999", fontSize: 12 }} 
             dy={10}
-            angle={-35}
-            textAnchor="end"
-            height={120}
+            angle={isMobile ? 0 : -35}
+            textAnchor={isMobile ? "middle" : "end"}
+            height={isMobile ? 20 : 120}
           />
           <YAxis 
             axisLine={false} 

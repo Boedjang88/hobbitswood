@@ -7,71 +7,109 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-mot
 import { Sparkles, Hammer, Award, Warehouse } from "lucide-react";
 import PageEntranceSplash from "@/components/PageEntranceSplash";
 
-// ─── Custom Hook to Track Scroll Direction ───────────────────────────
-function useScrollDirection() {
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
+// ─── Reusable Animated Components with Stable Entrance Observer ──────
+const RevealText = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  const [direction, setDirection] = useState<"up" | "down">("down");
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (Math.abs(currentScrollY - lastScrollY.current) > 5) {
-        if (currentScrollY > lastScrollY.current) {
-          setScrollDirection("down");
-        } else if (currentScrollY < lastScrollY.current) {
-          setScrollDirection("up");
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const currentScrollY = window.scrollY;
+          if (currentScrollY > lastScrollY.current) {
+            setDirection("down");
+          } else {
+            setDirection("up");
+          }
+          setIsInView(true);
+        } else {
+          setIsInView(false);
         }
-      }
-      lastScrollY.current = currentScrollY;
-    };
+      },
+      { threshold: 0.1, rootMargin: "-30px" }
+    );
 
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    const handleScroll = () => {
+      lastScrollY.current = window.scrollY;
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
-  return scrollDirection;
-}
-
-// ─── Reusable Animated Components ────────────────────────────────────
-const RevealText = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
-  const scrollDirection = useScrollDirection();
-  // Slide up on scroll down, slide down on scroll up
-  const initialY = scrollDirection === "down" ? 50 : -50;
+  const initialY = direction === "down" ? 40 : -40;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: initialY, filter: "blur(10px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: false, margin: "-50px" }}
-      transition={{ duration: 1, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <div ref={ref} className={className}>
+      <motion.div
+        initial={{ opacity: 0, y: initialY, filter: "blur(8px)" }}
+        animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: initialY, filter: "blur(8px)" }}
+        transition={{ duration: 1, delay: isInView ? delay : 0, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 };
 
 const CinematicImage = ({ src, alt, className = "", children }: { src: string, alt: string, className?: string, children?: React.ReactNode }) => {
-  const scrollDirection = useScrollDirection();
-  // Curtain slides up to reveal on scroll down, slides down to reveal on scroll up
-  const curtainTargetY = scrollDirection === "down" ? "-100%" : "100%";
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  const [direction, setDirection] = useState<"up" | "down">("down");
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const currentScrollY = window.scrollY;
+          if (currentScrollY > lastScrollY.current) {
+            setDirection("down");
+          } else {
+            setDirection("up");
+          }
+          setIsInView(true);
+        } else {
+          setIsInView(false);
+        }
+      },
+      { threshold: 0.1, rootMargin: "-30px" }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    const handleScroll = () => {
+      lastScrollY.current = window.scrollY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const curtainTargetY = direction === "down" ? "-100%" : "100%";
 
   return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, margin: "-50px" }}
-      className={`relative overflow-hidden group ${className}`}
-    >
+    <div ref={ref} className={`relative overflow-hidden group ${className}`}>
       {/* Zoom-out revealing image */}
       <motion.div
-        variants={{
-          hidden: { scale: 1.15 },
-          visible: { 
-            scale: 1,
-            transition: { duration: 1.6, ease: [0.16, 1, 0.3, 1] }
-          }
-        }}
+        initial={{ scale: 1.12 }}
+        animate={isInView ? { scale: 1 } : { scale: 1.12 }}
+        transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 z-0"
       >
         <Image src={src} alt={alt} fill className="object-cover" />
@@ -79,13 +117,9 @@ const CinematicImage = ({ src, alt, className = "", children }: { src: string, a
 
       {/* Cinematic Slide Curtain */}
       <motion.div
-        variants={{
-          hidden: { y: "0%" },
-          visible: { 
-            y: curtainTargetY,
-            transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.05 }
-          }
-        }}
+        initial={{ y: "0%" }}
+        animate={isInView ? { y: curtainTargetY } : { y: "0%" }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
         className="absolute inset-0 z-10 bg-brand-wood dark:bg-zinc-800"
       />
       
@@ -96,7 +130,7 @@ const CinematicImage = ({ src, alt, className = "", children }: { src: string, a
       <div className="relative z-30 h-full w-full">
         {children}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Package, Eye, AlertTriangle, TrendingUp, Pencil, CircleDollarSign, Settings, Smartphone, MessageSquare } from "lucide-react";
+import { Plus, Package, Eye, AlertTriangle, TrendingUp, Pencil, CircleDollarSign, Settings, Smartphone, MessageSquare, ExternalLink } from "lucide-react";
 import AnalyticsChart from "@/components/admin/AnalyticsChart";
 import { MotionContainer, MotionItem } from "@/components/admin/DashboardAnimations";
 import QuickEditButton from "@/components/admin/QuickEditButton";
@@ -235,10 +235,31 @@ export default async function AdminDashboard() {
             {/* Quick Links Test */}
             <div className="pt-2">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-brand-dark/50 dark:text-zinc-500">Link Cepat Pengunjung</span>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <Link href="/" target="_blank" className="px-3 py-1.5 bg-[#111] dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg text-xs font-bold hover:opacity-85">Beranda</Link>
-                <Link href="/shop" target="_blank" className="px-3 py-1.5 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs font-bold text-brand-dark dark:text-zinc-200 hover:bg-[#F5F5F5] dark:hover:bg-zinc-850">Katalog Shop</Link>
-                <Link href="/faq" target="_blank" className="px-3 py-1.5 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs font-bold text-brand-dark dark:text-zinc-200 hover:bg-[#F5F5F5] dark:hover:bg-zinc-850">Bantuan/FAQ ({totalFaqQuestions})</Link>
+              <div className="mt-2 grid grid-cols-3 gap-2 w-full">
+                <Link 
+                  href="/" 
+                  target="_blank" 
+                  className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-2.5 bg-zinc-50 dark:bg-zinc-950 hover:bg-[#111] hover:text-white dark:hover:bg-zinc-100 dark:hover:text-zinc-900 border border-[#EAEAEA] dark:border-zinc-800 rounded-xl text-[10px] sm:text-xs font-bold transition-all text-center sm:text-left"
+                >
+                  <span>Beranda</span>
+                  <ExternalLink className="w-3 h-3 opacity-60 shrink-0 hidden sm:block" />
+                </Link>
+                <Link 
+                  href="/shop" 
+                  target="_blank" 
+                  className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-2.5 bg-zinc-50 dark:bg-zinc-950 hover:bg-[#111] hover:text-white dark:hover:bg-zinc-100 dark:hover:text-zinc-900 border border-[#EAEAEA] dark:border-zinc-800 rounded-xl text-[10px] sm:text-xs font-bold transition-all text-center sm:text-left"
+                >
+                  <span>Katalog</span>
+                  <ExternalLink className="w-3 h-3 opacity-60 shrink-0 hidden sm:block" />
+                </Link>
+                <Link 
+                  href="/faq" 
+                  target="_blank" 
+                  className="flex flex-col sm:flex-row items-center justify-center sm:justify-between p-2.5 bg-zinc-50 dark:bg-zinc-950 hover:bg-[#111] hover:text-white dark:hover:bg-zinc-100 dark:hover:text-zinc-900 border border-[#EAEAEA] dark:border-zinc-800 rounded-xl text-[10px] sm:text-xs font-bold transition-all text-center sm:text-left"
+                >
+                  <span>FAQ ({totalFaqQuestions})</span>
+                  <ExternalLink className="w-3 h-3 opacity-60 shrink-0 hidden sm:block" />
+                </Link>
               </div>
             </div>
           </div>

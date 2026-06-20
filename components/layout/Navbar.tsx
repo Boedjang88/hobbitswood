@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, Search, ShoppingBag } from "lucide-react";
+import { Menu, X, Search, ShoppingBag, Home, BookOpen, HelpCircle, Phone, MessageSquare } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useCartStore } from "@/lib/store/cartStore";
 
@@ -140,33 +140,12 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
             </li>
           </ul>
 
-          {/* Mobile toggle & cart */}
-          <div className="flex items-center gap-4 md:hidden relative z-50">
-            <button 
-              onClick={() => setSearchOpen(true)}
-              className="relative text-brand-light hover:text-brand-gold transition-colors"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-
-            <button 
-              onClick={() => toggleDrawer(true)}
-              className="relative text-brand-light hover:text-brand-gold transition-colors p-2"
-              aria-label="Cart"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              {mounted && cartCount > 0 && (
-                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[9px] font-bold text-brand-dark">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-
+          {/* Mobile toggle & theme */}
+          <div className="flex items-center gap-2 md:hidden relative z-50">
             <ThemeToggle className="relative text-brand-light hover:text-brand-gold transition-colors p-2" />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="relative"
+              className="relative p-2"
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               id="mobile-nav-toggle"
             >
@@ -243,45 +222,130 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
 
       {/* Mobile menu sliding side-drawer */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-40 w-72 max-w-[80vw] bg-brand-wood dark:bg-zinc-900 text-brand-light shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 bottom-0 z-40 w-[280px] max-w-[85vw] bg-white dark:bg-zinc-900 text-brand-dark dark:text-zinc-100 border-l border-[#EAEAEA] dark:border-zinc-800 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full pt-24 px-6 pb-8 justify-between">
-          <div className="flex flex-col gap-6">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-gold/60">Navigasi</p>
-            <nav className="flex flex-col gap-5">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="font-serif text-2xl tracking-wide text-brand-light hover:text-brand-gold transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+        <div className="flex flex-col h-full pt-20 pb-6">
+          
+          {/* Logo / Header Area */}
+          <div className="flex items-center justify-between px-6 pb-6 border-b border-[#EAEAEA] dark:border-zinc-800">
+            <div className="flex items-center gap-3">
+              <div className="relative w-8 h-8 flex-shrink-0">
+                <Image 
+                  src="/images/hobbits-wood-logo.svg" 
+                  alt="Hobbits Wood Logo" 
+                  fill 
+                  className="object-contain dark:invert" 
+                />
+              </div>
+              <span className="font-serif font-bold text-base text-brand-dark dark:text-zinc-100">Hobbits Wood</span>
+            </div>
+            <button 
+              onClick={() => setMobileOpen(false)}
+              className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-brand-dark/60 dark:text-zinc-400"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-gold/60">Tindakan Cepat</p>
+          {/* Drawer Navigation Links */}
+          <div className="flex-1 px-4 py-6 overflow-y-auto space-y-6">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-brand-dark/50 dark:text-zinc-500 mb-3 px-2">Menu Utama</p>
+              <nav className="space-y-1">
+                <Link
+                  href="/"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                >
+                  <Home className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <span>Beranda</span>
+                </Link>
+                <Link
+                  href="/shop"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                >
+                  <ShoppingBag className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <span>Katalog</span>
+                </Link>
+                <Link
+                  href="/our-story"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                >
+                  <BookOpen className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <span>Cerita Kami</span>
+                </Link>
+                <Link
+                  href="/faq"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                >
+                  <HelpCircle className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <span>Bantuan & FAQ</span>
+                </Link>
+              </nav>
+            </div>
+
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-brand-dark/50 dark:text-zinc-500 mb-3 px-2">Belanja</p>
+              <nav className="space-y-1">
+                {/* Search */}
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setSearchOpen(true);
+                  }}
+                  className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300 text-left"
+                >
+                  <Search className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <span>Cari Produk</span>
+                </button>
+                {/* Cart */}
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    toggleDrawer(true);
+                  }}
+                  className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300 text-left"
+                >
+                  <div className="relative">
+                    <ShoppingBag className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                    {mounted && cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-gold text-[8px] font-bold text-brand-dark">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                  <span>Keranjang Belanja</span>
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* Quick Actions at Bottom */}
+          <div className="p-4 border-t border-[#EAEAEA] dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-900/50 flex flex-col gap-2 mt-auto">
             <a
               href={customOrderLink}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="w-full text-center rounded-xl bg-brand-gold px-6 py-3 text-sm font-semibold tracking-wide text-brand-dark hover:bg-brand-light transition-all"
+              className="w-full flex justify-center items-center gap-2 p-2.5 bg-[#111] dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl text-xs font-semibold hover:opacity-95 shadow-sm transition-all"
             >
-              Custom Order
+              <MessageSquare className="w-4 h-4" />
+              <span>Custom Order</span>
             </a>
             <a
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-center rounded-xl border border-brand-light/20 px-6 py-3 text-sm tracking-wide text-brand-light hover:bg-white/10 transition-all"
+              onClick={() => setMobileOpen(false)}
+              className="w-full flex justify-center items-center gap-2 p-2.5 border border-[#EAEAEA] dark:border-zinc-800 hover:bg-black/5 dark:hover:bg-white/10 text-brand-dark dark:text-zinc-300 rounded-xl text-xs font-semibold transition-all"
             >
-              Hubungi WhatsApp
+              <Phone className="w-4 h-4 text-brand-gold" />
+              <span>Hubungi WhatsApp</span>
             </a>
           </div>
         </div>

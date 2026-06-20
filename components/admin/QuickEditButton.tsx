@@ -14,6 +14,9 @@ export default function QuickEditButton({ product }: { product: { id: string; na
   const [stock, setStock] = useState(product.stock);
 
   const handleSave = async () => {
+    if (!window.confirm(`Apakah Anda yakin ingin menyimpan perubahan harga & stok untuk "${product.name}"?`)) {
+      return;
+    }
     setIsSaving(true);
     const result = await quickEditProduct(product.id, price, stock);
     setIsSaving(false);

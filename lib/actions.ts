@@ -50,10 +50,15 @@ export async function addProduct(prevState: unknown, formData: FormData) {
   await checkAuth();
   try {
     const name = formData.get("name") as string;
-    let baseSlug = name
+    const customSlug = formData.get("slug") as string;
+    let baseSlug = (customSlug || name)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
+
+    if (!baseSlug) {
+      baseSlug = "product";
+    }
 
     let slug = baseSlug;
     let suffix = 2;
@@ -184,9 +189,32 @@ export async function updateProduct(id: string, prevState: unknown, formData: Fo
       };
     }
 
+    const product = await prisma.product.findUnique({ where: { id } });
+    if (!product) {
+      return { success: false, error: "Product not found" };
+    }
+
+    const customSlug = formData.get("slug") as string;
+    let slug = product.slug;
+    if (customSlug && customSlug !== product.slug) {
+      let baseSlug = customSlug
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+      if (baseSlug) {
+        slug = baseSlug;
+        let suffix = 2;
+        while (await prisma.product.findFirst({ where: { slug, id: { not: id } } })) {
+          slug = `${baseSlug}-${suffix}`;
+          suffix++;
+        }
+      }
+    }
+
     await (prisma.product as any).update({
       where: { id },
       data: {
+        slug,
         name: parsed.data.name,
         price: parsed.data.price,
         stock: parsed.data.stock,
@@ -260,6 +288,7 @@ export async function restoreProduct(id: string) {
       data: { isDeleted: false },
     });
     revalidatePath("/admin");
+    revalidatePath("/admin/trash");
     revalidatePath("/shop");
   } catch {
     console.error("Failed to restore product");
@@ -323,6 +352,7 @@ export async function permanentlyDeleteProduct(id: string) {
   await checkAuth();
   try {
     await prisma.product.delete({ where: { id } });
+    revalidatePath("/admin");
     revalidatePath("/admin/trash");
   } catch (err) {
     console.error("Failed to permanently delete product", err);

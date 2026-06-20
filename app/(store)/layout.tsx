@@ -105,24 +105,24 @@ export default async function StoreLayout({
                 </div>
 
                 {/* Other contacts stack */}
-                <div className="w-full flex flex-col gap-4 text-sm text-brand-light/70">
+                <div className="w-full flex flex-col gap-3 text-sm text-brand-light/80">
                   {/* Workshop */}
-                  <div className="flex items-start gap-3 text-left w-full">
-                    <span className="mt-0.5 p-2 bg-white/5 rounded-lg text-brand-gold shrink-0"><MapPin className="w-4 h-4" /></span>
-                    <div>
+                  <div className="w-full flex items-start gap-3.5 bg-white/[0.02] border border-white/5 rounded-xl p-4 transition-all hover:bg-white/[0.04]">
+                    <span className="p-2 bg-brand-gold/10 rounded-lg text-brand-gold shrink-0"><MapPin className="w-4 h-4" /></span>
+                    <div className="text-left">
                       <p className="text-[10px] uppercase tracking-wider text-white/40 font-bold">Workshop</p>
-                      <p className="mt-0.5 text-brand-light/90 font-medium leading-relaxed">{workshop}</p>
+                      <p className="mt-0.5 text-xs text-brand-light/95 font-medium leading-relaxed">{workshop}</p>
                     </div>
                   </div>
 
                   {/* WhatsApp */}
-                  <div className="flex items-start gap-3 text-left w-full">
-                    <span className="mt-0.5 p-2 bg-white/5 rounded-lg text-brand-gold shrink-0"><Phone className="w-4 h-4" /></span>
-                    <div>
+                  <div className="w-full flex items-start gap-3.5 bg-white/[0.02] border border-white/5 rounded-xl p-4 transition-all hover:bg-white/[0.04]">
+                    <span className="p-2 bg-brand-gold/10 rounded-lg text-brand-gold shrink-0"><Phone className="w-4 h-4" /></span>
+                    <div className="text-left">
                       <p className="text-[10px] uppercase tracking-wider text-white/40 font-bold">WhatsApp</p>
                       <a
                         href={`https://wa.me/${waNumberClean}`}
-                        className="mt-0.5 block text-brand-light/90 hover:text-brand-gold transition-colors font-medium"
+                        className="mt-0.5 block text-xs text-brand-light/95 hover:text-brand-gold transition-colors font-medium"
                       >
                         +{waNumberRaw.replace(/(\d{2})(\d{3})(\d{4})(\d{4})/, '$1 $2-$3-$4')}
                       </a>
@@ -130,13 +130,13 @@ export default async function StoreLayout({
                   </div>
 
                   {/* Email */}
-                  <div className="flex items-start gap-3 text-left w-full">
-                    <span className="mt-0.5 p-2 bg-white/5 rounded-lg text-brand-gold shrink-0"><Mail className="w-4 h-4" /></span>
-                    <div>
+                  <div className="w-full flex items-start gap-3.5 bg-white/[0.02] border border-white/5 rounded-xl p-4 transition-all hover:bg-white/[0.04]">
+                    <span className="p-2 bg-brand-gold/10 rounded-lg text-brand-gold shrink-0"><Mail className="w-4 h-4" /></span>
+                    <div className="text-left">
                       <p className="text-[10px] uppercase tracking-wider text-white/40 font-bold">Email</p>
                       <a
                         href={`mailto:${email}`}
-                        className="mt-0.5 block text-brand-light/90 hover:text-brand-gold transition-colors font-medium break-all"
+                        className="mt-0.5 block text-xs text-brand-light/95 hover:text-brand-gold transition-colors font-medium break-all"
                       >
                         {email}
                       </a>

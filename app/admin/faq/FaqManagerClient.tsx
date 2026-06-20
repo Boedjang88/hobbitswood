@@ -146,9 +146,9 @@ export default function FaqManagerClient({ categories }: Props) {
           </div>
         </div>
 
-        {/* FAQ Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse whitespace-nowrap min-w-[700px]">
+        {/* FAQ Table (Desktop & Tablet View) */}
+        <div className="hidden sm:block overflow-x-auto">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead>
               <tr className="bg-[#FAFAFA]/30 dark:bg-zinc-950/30 text-xs text-brand-dark dark:text-brand-light border-b border-[#EAEAEA] dark:border-zinc-800 uppercase tracking-wider">
                 <th className="p-4 font-semibold pl-6 w-1/3">Pertanyaan</th>
@@ -238,6 +238,66 @@ export default function FaqManagerClient({ categories }: Props) {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* FAQ Mobile View Card List */}
+        <div className="block sm:hidden divide-y divide-[#EAEAEA] dark:divide-zinc-800">
+          {filteredItems.length === 0 ? (
+            <div className="p-8 text-center text-brand-dark dark:text-brand-light">
+              <HelpCircle className="w-8 h-8 opacity-20 mx-auto mb-2" />
+              <p>Tidak ada FAQ ditemukan.</p>
+            </div>
+          ) : (
+            filteredItems.map((item) => {
+              const isExpanded = !!expandedItems[item.id];
+              return (
+                <div key={item.id} className="p-4 flex flex-col gap-2.5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-2">
+                      <span className="p-1.5 bg-brand-gold/10 text-brand-gold rounded-lg shrink-0 mt-0.5"><HelpCircle className="w-4 h-4" /></span>
+                      <h4 className="font-semibold text-sm text-brand-dark dark:text-zinc-100 leading-snug">{item.question}</h4>
+                    </div>
+                    
+                    <button
+                      onClick={() => handleDeleteItem(item.id)}
+                      className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg shrink-0 transition-colors"
+                      title="Hapus Pertanyaan"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  <div className="text-xs text-brand-dark/80 dark:text-brand-light/80 bg-zinc-50 dark:bg-zinc-950 p-3 rounded-xl border border-zinc-100 dark:border-zinc-850">
+                    <p className={isExpanded ? "" : "line-clamp-3 leading-relaxed"}>{item.answer}</p>
+                    {item.answer.length > 80 && (
+                      <button
+                        onClick={() => toggleExpand(item.id)}
+                        className="mt-1.5 text-[10px] font-bold text-brand-dark dark:text-zinc-300 hover:underline flex items-center gap-1"
+                      >
+                        {isExpanded ? (
+                          <>Tutup <ChevronUp className="w-3 h-3" /></>
+                        ) : (
+                          <>Selengkapnya <ChevronDown className="w-3 h-3" /></>
+                        )}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10px] text-brand-dark/50 dark:text-zinc-500 font-bold uppercase tracking-wider">
+                    {activeTab === "ALL" && item.categoryTitle ? (
+                      <span className="flex items-center gap-1">
+                        <Folder className="w-3 h-3 text-brand-gold" />
+                        <span>Kategori: {item.categoryTitle}</span>
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                    <span>Urutan: {item.order}</span>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>
