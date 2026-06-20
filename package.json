@@ -1,0 +1,48 @@
+{
+  "name": "hobbit",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i app/globals.css -o app/tailwind.css --watch & next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "clsx": "^2.1.1",
+    "csstype": "^3.2.3",
+    "dotenv": "^17.4.2",
+    "framer-motion": "^12.40.0",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.20.0",
+    "next": "^16.2.9",
+    "next-themes": "^0.4.6",
+    "pg": "^8.21.0",
+    "prisma": "^7.8.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "recharts": "^3.8.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^25",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^10",
+    "eslint-config-next": "^16.2.9",
+    "puppeteer": "^25.1.0",
+    "tailwindcss": "^4",
+    "typescript": "^6"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  }
+}

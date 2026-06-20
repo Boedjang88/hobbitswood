@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id              String            @id @default(cuid())
+  slug            String            @unique
+  name            String
+  price           Int
+  category        String
+  images          String            @default("[]")
+  description     String            
+  dimensions      String            @default("[]")
+  materials       String            @default("[]")
+  finishings      String            @default("[]")
+  status          String            @default("PUBLISHED")
+  isDeleted       Boolean           @default(false)
+  views           Int               @default(0)
+  stock           Int               @default(10)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  links           MarketplaceLink[]
+}
+
+model MarketplaceLink {
+  id        String  @id @default(cuid())
+  platform  String  
+  url       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model FaqCategory {
+  id        String    @id @default(cuid())
+  title     String
+  order     Int       @default(0)
+  items     FaqItem[]
+  createdAt DateTime  @default(now())
+}
+
+model FaqItem {
+  id         String      @id @default(cuid())
+  question   String
+  answer     String
+  order      Int         @default(0)
+  categoryId String
+  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime    @default(now())
+}
+
+model SiteSettings {
+  id                String @id @default(cuid())
+  promoText         String @default("Free Shipping across Java & Bali")
+  waNumber          String @default("628123456789")
+  customOrderWaText String @default("Halo Hobbits Wood, saya ingin berdiskusi mengenai custom order...")
+  email             String @default("muhammadluayyi89@gmail.com")
+  workshop          String @default("Boyolali, Jawa Tengah")
+  instagram         String @default("")
+  tiktok            String @default("")
+  tokopedia         String @default("")
+  shopee            String @default("")
+  jamBuka           String @default("Senin - Sabtu, 08:00 - 17:00 WIB")
+}
