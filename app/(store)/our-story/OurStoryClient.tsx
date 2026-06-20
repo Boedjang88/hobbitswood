@@ -22,10 +22,10 @@ const RevealText = ({ children, delay = 0, className = "" }: { children: React.R
 
 const CinematicImage = ({ src, alt, className = "", children }: { src: string, alt: string, className?: string, children?: React.ReactNode }) => (
   <motion.div
-    initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
-    whileInView={{ clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)" }}
+    initial={{ opacity: 0, scale: 1.05, y: 15 }}
+    whileInView={{ opacity: 1, scale: 1, y: 0 }}
     viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
     className={`relative overflow-hidden group ${className}`}
   >
     <motion.div 
