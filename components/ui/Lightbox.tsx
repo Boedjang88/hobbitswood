@@ -130,34 +130,34 @@ export default function Lightbox({
 
       {/* Control Buttons */}
       <div className="absolute top-4 right-4 z-[120] flex items-center gap-2">
-        {/* Zoom Out Button */}
+        {/* Zoom Out Button - desktop only */}
         <button
           onClick={handleZoomOut}
           disabled={scale === 1}
-          className="rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center"
+          className="hidden md:flex rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none items-center justify-center"
           title="Zoom Out"
         >
           <Minus className="h-5 w-5" />
         </button>
 
-        {/* Zoom Value */}
-        <span className="text-white text-xs font-mono font-semibold w-10 text-center bg-black/30 border border-white/5 py-1.5 rounded-lg">
+        {/* Zoom Value - desktop only */}
+        <span className="hidden md:flex text-white text-xs font-mono font-semibold w-10 text-center bg-black/30 border border-white/5 py-1.5 rounded-lg">
           {scale.toFixed(1)}x
         </span>
 
-        {/* Zoom In Button */}
+        {/* Zoom In Button - desktop only */}
         <button
           onClick={handleZoomIn}
           disabled={scale === 3.5}
-          className="rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center"
+          className="hidden md:flex rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none items-center justify-center"
           title="Zoom In"
         >
           <Plus className="h-5 w-5" />
         </button>
 
-        <div className="w-[1px] h-6 bg-white/20 mx-1" />
+        <div className="hidden md:block w-[1px] h-6 bg-white/20 mx-1" />
 
-        {/* Close Button */}
+        {/* Close Button - always visible */}
         <button
           onClick={onClose}
           className="rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 flex items-center justify-center"
@@ -180,7 +180,7 @@ export default function Lightbox({
       {/* Main Image Container with AnimatePresence Slider */}
       <div 
         ref={containerRef}
-        className="relative h-[65vh] w-[95vw] max-w-4xl flex items-center justify-center overflow-hidden touch-none"
+        className="relative h-[60svh] md:h-[68vh] w-[95vw] max-w-4xl flex items-center justify-center overflow-hidden touch-none"
       >
         <AnimatePresence initial={false} custom={slideDirection}>
           <motion.div
@@ -236,6 +236,31 @@ export default function Lightbox({
         >
           <ChevronRight className="h-6 w-6" />
         </button>
+      )}
+
+      {/* Mobile-only bottom zoom bar */}
+      {scale >= 1 && (
+        <div className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-[120] flex items-center gap-3 bg-black/50 backdrop-blur-md rounded-2xl px-4 py-2.5 border border-white/10">
+          <button
+            onClick={handleZoomOut}
+            disabled={scale === 1}
+            className="rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center"
+            title="Zoom Out"
+          >
+            <Minus className="h-4 w-4" />
+          </button>
+          <span className="text-white text-xs font-mono font-semibold w-10 text-center">
+            {scale.toFixed(1)}x
+          </span>
+          <button
+            onClick={handleZoomIn}
+            disabled={scale === 3.5}
+            className="rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center"
+            title="Zoom In"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </div>
       )}
 
       {/* Thumbnail Bar */}

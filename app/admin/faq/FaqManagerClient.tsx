@@ -112,7 +112,7 @@ export default function FaqManagerClient({ categories }: Props) {
               </button>
               <button
                 onClick={() => handleDeleteCategory(cat.id, cat.title)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-red-500 rounded hover:bg-red-50 dark:hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-red-500 rounded hover:bg-red-50 dark:hover:bg-red-500/10 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                 title="Hapus Kategori"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -267,7 +267,7 @@ export default function FaqManagerClient({ categories }: Props) {
                     </button>
                   </div>
                   
-                  <div className="text-xs text-brand-dark/80 dark:text-brand-light/80 bg-zinc-50 dark:bg-zinc-950 p-3 rounded-xl border border-zinc-100 dark:border-zinc-850">
+                  <div className="text-xs text-brand-dark/80 dark:text-brand-light/80 bg-zinc-50 dark:bg-zinc-950 p-3 rounded-xl border border-zinc-100 dark:border-zinc-800">
                     <p className={isExpanded ? "" : "line-clamp-3 leading-relaxed"}>{item.answer}</p>
                     {item.answer.length > 80 && (
                       <button

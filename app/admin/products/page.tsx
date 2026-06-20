@@ -208,7 +208,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                     <ToggleStatusButton productId={product.id} productName={product.name} currentStatus={product.status} />
                   </div>
 
-                  <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-dashed border-[#EAEAEA] dark:border-zinc-850">
+                  <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-dashed border-[#EAEAEA] dark:border-zinc-800">
                     <QuickEditButton product={{ id: product.id, name: product.name, price: product.price, stock: product.stock }} />
                     <Link
                       href={`/product/${product.slug}`}

@@ -26,11 +26,11 @@ export default function FloatingCart() {
           exit={{ scale: 0, opacity: 0, y: 50 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
           onClick={() => toggleDrawer(true)}
-          className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand-gold text-brand-dark shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-300 ring-4 ring-brand-gold/20"
+          className="fixed bottom-24 right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-brand-gold text-brand-dark shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-300 ring-4 ring-brand-gold/20"
           aria-label="Keranjang Belanja"
         >
           <div className="relative">
-            <ShoppingBag className="w-6 h-6" />
+            <ShoppingBag className="w-5 h-5" />
             <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-green text-[10px] font-bold text-white shadow-md animate-bounce">
               {totalItems}
             </span>

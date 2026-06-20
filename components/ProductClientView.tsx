@@ -355,7 +355,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
       />
 
       {/* Sticky Bottom Actions Bar (Mobile Only) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-zinc-950 border-t border-brand-wood/10 dark:border-white/10 px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[45] bg-white dark:bg-zinc-950 border-t border-brand-wood/10 dark:border-white/10 px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] flex items-center justify-between gap-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
         {/* WhatsApp Icon Button */}
         <a 
           href={whatsappHref} 

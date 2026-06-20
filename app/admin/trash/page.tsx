@@ -109,7 +109,7 @@ export default async function TrashPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-end gap-2.5 pt-2.5 border-t border-dashed border-[#EAEAEA] dark:border-zinc-850">
+                <div className="flex items-center justify-end gap-2.5 pt-2.5 border-t border-dashed border-[#EAEAEA] dark:border-zinc-800">
                   <RestoreProductButton productId={product.id} productName={product.name} />
                   <DestroyProductButton productId={product.id} productName={product.name} />
                 </div>

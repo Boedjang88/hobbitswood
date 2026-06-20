@@ -91,12 +91,12 @@ export default async function ShopPage(props: {
           </div>
 
           {/* Controls Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 bg-white dark:bg-[#222] p-4 rounded-lg shadow-sm border border-brand-wood/10 dark:border-brand-light/10 overflow-hidden">
+          <div className="flex flex-col gap-4 mb-10 bg-white dark:bg-[#222] p-3 sm:p-4 rounded-lg shadow-sm border border-brand-wood/10 dark:border-brand-light/10">
             {/* Category filter pills */}
-            <div className="flex w-full md:w-auto overflow-x-auto md:flex-wrap items-center gap-2 pb-2 md:pb-0 scrollbar-none snap-x">
+            <div className="flex overflow-x-auto items-center gap-2 pb-1 scrollbar-none snap-x -mx-1 px-1">
               <Link
                 href={buildUrl("")}
-                className={`rounded-full px-5 py-2 text-xs tracking-wide transition-all duration-300 whitespace-nowrap shrink-0 snap-start ${
+                className={`rounded-full px-4 py-1.5 text-xs tracking-wide transition-all duration-300 whitespace-nowrap shrink-0 snap-start ${
                   !category
                     ? "bg-brand-dark text-brand-light dark:bg-brand-light dark:text-brand-dark"
                     : "border border-brand-wood/20 text-brand-dark dark:text-brand-light hover:border-brand-wood dark:hover:border-brand-light"
@@ -108,7 +108,7 @@ export default async function ShopPage(props: {
                 <Link
                   key={cat.category}
                   href={buildUrl(cat.category)}
-                  className={`rounded-full px-5 py-2 text-xs tracking-wide transition-all duration-300 whitespace-nowrap shrink-0 snap-start ${
+                  className={`rounded-full px-4 py-1.5 text-xs tracking-wide transition-all duration-300 whitespace-nowrap shrink-0 snap-start ${
                     category === cat.category
                       ? "bg-brand-dark text-brand-light dark:bg-brand-light dark:text-brand-dark"
                       : "border border-brand-wood/20 text-brand-dark dark:text-brand-light hover:border-brand-wood dark:hover:border-brand-light"
@@ -119,8 +119,11 @@ export default async function ShopPage(props: {
               ))}
             </div>
 
+            <div className="border-t border-brand-wood/5 dark:border-brand-light/5 pt-3">
               <CatalogControls currentSort={sort} category={category} material={material} />
+            </div>
           </div>
+
 
           {/* Product grid */}
           <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-10">

@@ -42,7 +42,7 @@ export default function AnimateOnScroll({
   direction = "up",
   delay = 0,
   duration = 0.6,
-  once = false,
+  once = true,
 }: AnimateOnScrollProps) {
   const variants = getVariants(direction);
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Link as LinkIcon, RefreshCw, Layers } from "lucide-react";
+import { Plus, Trash2, Link as LinkIcon, RefreshCw } from "lucide-react";
 
 // ─── 1. SLUG GENERATOR ────────────────────────────────────
 interface SlugGeneratorProps {
@@ -57,7 +57,17 @@ export function SlugGenerator({ productName, initialValue = "" }: SlugGeneratorP
           value={slug}
           onChange={(e) => {
             setIsManual(true);
-            setSlug(slugify(e.target.value));
+            const val = e.target.value
+              .toLowerCase()
+              .replace(/\s+/g, "-")
+              .replace(/[^a-z0-9-]/g, "");
+            setSlug(val);
+          }}
+          onBlur={() => {
+            const cleaned = slug
+              .replace(/-+/g, "-")
+              .replace(/^-|-$/g, "");
+            setSlug(cleaned);
           }}
           placeholder="nama-produk-otomatis"
           className="w-full rounded-lg border border-[#EAEAEA] dark:border-zinc-800 bg-white dark:bg-zinc-950 pl-18 pr-4 py-2.5 text-sm outline-none transition-all text-brand-dark dark:text-zinc-100 focus:border-[#111] dark:focus:border-zinc-600 focus:ring-2 focus:ring-[#111]/10 dark:focus:ring-zinc-100/10 placeholder-[#999] dark:placeholder-zinc-600 font-mono"
@@ -160,7 +170,6 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
 
       <div className="space-y-4">
         {items.map((item, idx) => {
-          // Compute value for hidden input
           const finalValue =
             item.mode === "structured"
               ? item.l && item.w && item.h
@@ -169,8 +178,7 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
               : item.customText;
 
           return (
-            <div key={item.id} className="relative p-4 rounded-xl border border-zinc-150 dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20 space-y-3">
-              {/* Hidden Input for Form Submission */}
+            <div key={item.id} className="relative p-4 rounded-xl border border-[#EAEAEA] dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20 space-y-3">
               <input type="hidden" name="dimensions" value={finalValue} />
 
               <div className="flex items-center justify-between gap-4">
@@ -182,7 +190,7 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                     className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase transition-all ${
                       item.mode === "structured"
                         ? "bg-brand-dark text-white dark:bg-zinc-200 dark:text-zinc-900"
-                        : "text-zinc-400 dark:text-zinc-650 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        : "text-zinc-400 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     }`}
                   >
                     Terstruktur
@@ -193,7 +201,7 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                     className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase transition-all ${
                       item.mode === "manual"
                         ? "bg-brand-dark text-white dark:bg-zinc-200 dark:text-zinc-900"
-                        : "text-zinc-400 dark:text-zinc-650 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        : "text-zinc-400 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     }`}
                   >
                     Bebas
@@ -210,7 +218,6 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                 </div>
               </div>
 
-              {/* Mode: Structured */}
               {item.mode === "structured" ? (
                 <div className="grid grid-cols-4 gap-2 items-center">
                   <div>
@@ -220,7 +227,7 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                       required
                       value={item.l}
                       onChange={(e) => updateItem(item.id, { l: e.target.value })}
-                      className="w-full text-center px-2 py-1.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
+                      className="w-full text-center px-2 py-1.5 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
                     />
                   </div>
                   <div>
@@ -230,7 +237,7 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                       required
                       value={item.w}
                       onChange={(e) => updateItem(item.id, { w: e.target.value })}
-                      className="w-full text-center px-2 py-1.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
+                      className="w-full text-center px-2 py-1.5 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
                     />
                   </div>
                   <div>
@@ -240,14 +247,14 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                       required
                       value={item.h}
                       onChange={(e) => updateItem(item.id, { h: e.target.value })}
-                      className="w-full text-center px-2 py-1.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
+                      className="w-full text-center px-2 py-1.5 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
                     />
                   </div>
                   <div>
                     <select
                       value={item.unit}
                       onChange={(e) => updateItem(item.id, { unit: e.target.value })}
-                      className="w-full px-2 py-1.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 font-semibold"
+                      className="w-full px-2 py-1.5 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 font-semibold"
                     >
                       <option value="cm">cm</option>
                       <option value="mm">mm</option>
@@ -256,7 +263,6 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                   </div>
                 </div>
               ) : (
-                /* Mode: Manual Custom Text */
                 <div>
                   <input
                     type="text"
@@ -264,14 +270,13 @@ export function StructuredDimensionsInput({ initialValues = [""] }: DimensionsIn
                     required
                     value={item.customText}
                     onChange={(e) => updateItem(item.id, { customText: e.target.value })}
-                    className="w-full px-3 py-1.5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
                   />
                 </div>
               )}
 
-              {/* Preset buttons */}
               <div className="flex flex-wrap gap-1 items-center">
-                <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-600 mr-1">Rekomendasi:</span>
+                <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 mr-1">Rekomendasi:</span>
                 {DIMENSION_PRESETS.map((preset) => (
                   <button
                     key={preset.label}
@@ -332,15 +337,13 @@ export function StructuredMaterialsInput({ initialValues = [""] }: MaterialsInpu
     <div className="space-y-3">
       <label className="text-sm font-semibold text-brand-dark dark:text-zinc-100">Bahan / Material *</label>
 
-      {/* Hidden inputs for each item */}
       {list.length === 0 ? (
         <input type="hidden" name="materials" value="" />
       ) : (
         list.map((m, idx) => <input key={idx} type="hidden" name="materials" value={m} />)
       )}
 
-      {/* Preset Suggestions Badges */}
-      <div className="flex flex-wrap gap-1.5 p-3 rounded-xl border border-zinc-150 dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20">
+      <div className="flex flex-wrap gap-1.5 p-3 rounded-xl border border-[#EAEAEA] dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20">
         {MATERIAL_SUGGESTIONS.map((mat) => {
           const isSelected = list.includes(mat);
           return (
@@ -351,7 +354,7 @@ export function StructuredMaterialsInput({ initialValues = [""] }: MaterialsInpu
               className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                 isSelected
                   ? "bg-brand-dark text-white dark:bg-zinc-200 dark:text-zinc-900 shadow-xs"
-                  : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-brand-dark dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                  : "bg-white dark:bg-zinc-900 border border-[#EAEAEA] dark:border-zinc-800 text-brand-dark dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
               }`}
             >
               {mat}
@@ -360,7 +363,6 @@ export function StructuredMaterialsInput({ initialValues = [""] }: MaterialsInpu
         })}
       </div>
 
-      {/* Selected Items & Custom Input */}
       <div className="flex items-center gap-2">
         <input
           type="text"
@@ -373,7 +375,7 @@ export function StructuredMaterialsInput({ initialValues = [""] }: MaterialsInpu
               handleAddCustom();
             }
           }}
-          className="flex-1 px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 focus:border-brand-gold/50"
+          className="flex-1 px-3 py-2 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 focus:border-brand-gold/50"
         />
         <button
           type="button"
@@ -384,7 +386,6 @@ export function StructuredMaterialsInput({ initialValues = [""] }: MaterialsInpu
         </button>
       </div>
 
-      {/* Custom Selected list (in case there are manually added ones not in presets) */}
       {list.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-1">
           {list.map((mat) => (
@@ -449,15 +450,13 @@ export function StructuredFinishingsInput({ initialValues = [""] }: FinishingsIn
     <div className="space-y-3">
       <label className="text-sm font-semibold text-brand-dark dark:text-zinc-100">Sentuhan / Finishing *</label>
 
-      {/* Hidden inputs for each item */}
       {list.length === 0 ? (
         <input type="hidden" name="finishings" value="" />
       ) : (
         list.map((f, idx) => <input key={idx} type="hidden" name="finishings" value={f} />)
       )}
 
-      {/* Preset Suggestions Badges */}
-      <div className="flex flex-wrap gap-1.5 p-3 rounded-xl border border-zinc-150 dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20">
+      <div className="flex flex-wrap gap-1.5 p-3 rounded-xl border border-[#EAEAEA] dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20">
         {FINISHING_SUGGESTIONS.map((fin) => {
           const isSelected = list.includes(fin);
           return (
@@ -468,7 +467,7 @@ export function StructuredFinishingsInput({ initialValues = [""] }: FinishingsIn
               className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                 isSelected
                   ? "bg-brand-dark text-white dark:bg-zinc-200 dark:text-zinc-900 shadow-xs"
-                  : "bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-brand-dark dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                  : "bg-white dark:bg-zinc-900 border border-[#EAEAEA] dark:border-zinc-800 text-brand-dark dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
               }`}
             >
               {fin}
@@ -477,7 +476,6 @@ export function StructuredFinishingsInput({ initialValues = [""] }: FinishingsIn
         })}
       </div>
 
-      {/* Selected Items & Custom Input */}
       <div className="flex items-center gap-2">
         <input
           type="text"
@@ -490,7 +488,7 @@ export function StructuredFinishingsInput({ initialValues = [""] }: FinishingsIn
               handleAddCustom();
             }
           }}
-          className="flex-1 px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 focus:border-brand-gold/50"
+          className="flex-1 px-3 py-2 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 focus:border-brand-gold/50"
         />
         <button
           type="button"
@@ -501,7 +499,6 @@ export function StructuredFinishingsInput({ initialValues = [""] }: FinishingsIn
         </button>
       </div>
 
-      {/* Custom Selected list */}
       {list.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-1">
           {list.map((fin) => (
@@ -532,7 +529,7 @@ const MARKETPLACE_PLATFORMS = [
   { name: "Shopee", color: "bg-[#EE4D2D]/10 text-[#EE4D2D] border-[#EE4D2D]/20 hover:bg-[#EE4D2D]/20" },
   { name: "WhatsApp", color: "bg-[#25D366]/10 text-[#25D366] border-[#25D366]/20 hover:bg-[#25D366]/20" },
   { name: "Instagram", color: "bg-[#E1306C]/10 text-[#E1306C] border-[#E1306C]/20 hover:bg-[#E1306C]/20" },
-  { name: "Lainnya", color: "bg-zinc-100 text-zinc-650 dark:bg-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200" }
+  { name: "Lainnya", color: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 border-[#EAEAEA] dark:border-zinc-700 hover:bg-zinc-200" }
 ];
 
 interface MarketplaceLinksProps {
@@ -572,7 +569,7 @@ export function StructuredMarketplaceLinks({ initialLinks = [{ platform: "", url
 
       <div className="space-y-3">
         {links.map((lnk, idx) => (
-          <div key={idx} className="p-4 rounded-xl border border-zinc-150 dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20 space-y-3">
+          <div key={idx} className="p-4 rounded-xl border border-[#EAEAEA] dark:border-zinc-800 bg-[#FAFAFA]/50 dark:bg-zinc-950/20 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Link #{idx + 1}</span>
               {links.length > 1 && (
@@ -586,7 +583,6 @@ export function StructuredMarketplaceLinks({ initialLinks = [{ platform: "", url
               )}
             </div>
 
-            {/* Platform Quick Selection Buttons */}
             <div className="flex flex-wrap gap-1.5">
               {MARKETPLACE_PLATFORMS.map((platform) => {
                 const isSelected = lnk.platform.toLowerCase() === platform.name.toLowerCase();
@@ -607,7 +603,6 @@ export function StructuredMarketplaceLinks({ initialLinks = [{ platform: "", url
               })}
             </div>
 
-            {/* Inputs */}
             <div className="flex gap-2">
               <input
                 type="text"
@@ -616,7 +611,7 @@ export function StructuredMarketplaceLinks({ initialLinks = [{ platform: "", url
                 placeholder="Platform (e.g. Tokopedia)"
                 value={lnk.platform}
                 onChange={(e) => updateLink(idx, "platform", e.target.value)}
-                className="w-1/3 px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
+                className="w-1/3 px-3 py-2 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200"
               />
               <div className="flex-1 relative flex items-center">
                 <LinkIcon className="absolute left-3 w-3.5 h-3.5 text-zinc-400 select-none" />
@@ -627,7 +622,7 @@ export function StructuredMarketplaceLinks({ initialLinks = [{ platform: "", url
                   placeholder="URL link produk (https://...)"
                   value={lnk.url}
                   onChange={(e) => updateLink(idx, "url", e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 focus:border-brand-gold/50"
+                  className="w-full pl-9 pr-3 py-2 bg-white dark:bg-zinc-950 border border-[#EAEAEA] dark:border-zinc-800 rounded-lg text-xs outline-none text-brand-dark dark:text-zinc-200 focus:border-brand-gold/50"
                 />
               </div>
             </div>

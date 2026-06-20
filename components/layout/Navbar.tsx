@@ -172,7 +172,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
 
       {/* Global Search Overlay */}
       <div 
-        className={`fixed inset-0 z-50 bg-brand-light/95 dark:bg-brand-dark/95 backdrop-blur-sm transition-all duration-300 flex items-start justify-center pt-32 px-6 ${
+        className={`fixed inset-0 z-[60] bg-brand-light/95 dark:bg-brand-dark/95 backdrop-blur-sm transition-all duration-300 flex items-start justify-center pt-32 px-6 ${
           searchOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
@@ -259,7 +259,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
                 >
-                  <Home className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <Home className="h-[18px] w-[18px] text-brand-gold shrink-0" />
                   <span>Beranda</span>
                 </Link>
                 <Link
@@ -267,7 +267,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
                 >
-                  <ShoppingBag className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <ShoppingBag className="h-[18px] w-[18px] text-brand-gold shrink-0" />
                   <span>Katalog</span>
                 </Link>
                 <Link
@@ -275,7 +275,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
                 >
-                  <BookOpen className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <BookOpen className="h-[18px] w-[18px] text-brand-gold shrink-0" />
                   <span>Cerita Kami</span>
                 </Link>
                 <Link
@@ -283,7 +283,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
                 >
-                  <HelpCircle className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <HelpCircle className="h-[18px] w-[18px] text-brand-gold shrink-0" />
                   <span>Bantuan & FAQ</span>
                 </Link>
               </nav>
@@ -300,7 +300,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
                   }}
                   className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300 text-left"
                 >
-                  <Search className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                  <Search className="h-[18px] w-[18px] text-brand-gold shrink-0" />
                   <span>Cari Produk</span>
                 </button>
                 {/* Cart */}
@@ -312,7 +312,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
                   className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300 text-left"
                 >
                   <div className="relative">
-                    <ShoppingBag className="h-4.5 w-4.5 text-brand-gold shrink-0" />
+                    <ShoppingBag className="h-[18px] w-[18px] text-brand-gold shrink-0" />
                     {mounted && cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-gold text-[8px] font-bold text-brand-dark">
                         {cartCount}

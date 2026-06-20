@@ -38,14 +38,14 @@ export default function CartDrawer({ waNumber = "6285811362629" }: { waNumber?: 
       {/* Overlay */}
       {isDrawerOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-50 transition-opacity"
+          className="fixed inset-0 bg-black/50 z-[55] transition-opacity"
           onClick={() => toggleDrawer(false)}
         />
       )}
 
       {/* Drawer */}
       <div 
-        className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-brand-cream dark:bg-[#2A2A2A] z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-brand-cream dark:bg-[#2A2A2A] z-[60] transform transition-transform duration-300 ease-in-out flex flex-col shadow-2xl ${
           isDrawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -118,7 +118,7 @@ export default function CartDrawer({ waNumber = "6285811362629" }: { waNumber?: 
         </div>
 
         {items.length > 0 && (
-          <div className="p-6 border-t border-brand-wood/10 dark:border-brand-light/10 bg-brand-cream dark:bg-[#2A2A2A]">
+          <div className="p-4 sm:p-6 border-t border-brand-wood/10 dark:border-brand-light/10 bg-brand-cream dark:bg-[#2A2A2A] pb-[max(24px,env(safe-area-inset-bottom))]">
             <div className="flex justify-between items-center mb-6">
               <span className="text-brand-dark dark:text-brand-light font-medium">Total Estimasi</span>
               <span className="text-xl font-serif text-brand-dark dark:text-brand-light">

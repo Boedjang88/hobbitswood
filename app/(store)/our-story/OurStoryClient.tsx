@@ -11,50 +11,35 @@ import PageEntranceSplash from "@/components/PageEntranceSplash";
 const RevealText = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
-  const [direction, setDirection] = useState<"up" | "down">("down");
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          const currentScrollY = window.scrollY;
-          if (currentScrollY > lastScrollY.current) {
-            setDirection("down");
-          } else {
-            setDirection("up");
-          }
           setIsInView(true);
-        } else {
-          setIsInView(false);
+          if (ref.current) {
+            observer.unobserve(ref.current);
+          }
         }
       },
-      { threshold: 0.1, rootMargin: "-30px" }
+      { threshold: 0.05, rootMargin: "0px 0px -50px 0px" }
     );
 
     if (ref.current) {
       observer.observe(ref.current);
     }
 
-    const handleScroll = () => {
-      lastScrollY.current = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const initialY = direction === "down" ? 40 : -40;
 
   return (
     <div ref={ref} className={className}>
       <motion.div
-        initial={{ opacity: 0, y: initialY, filter: "blur(8px)" }}
-        animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: initialY, filter: "blur(8px)" }}
-        transition={{ duration: 1, delay: isInView ? delay : 0, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
+        animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 30, filter: "blur(6px)" }}
+        transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
       >
         {children}
       </motion.div>
@@ -65,43 +50,28 @@ const RevealText = ({ children, delay = 0, className = "" }: { children: React.R
 const CinematicImage = ({ src, alt, className = "", children }: { src: string, alt: string, className?: string, children?: React.ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
-  const [direction, setDirection] = useState<"up" | "down">("down");
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          const currentScrollY = window.scrollY;
-          if (currentScrollY > lastScrollY.current) {
-            setDirection("down");
-          } else {
-            setDirection("up");
-          }
           setIsInView(true);
-        } else {
-          setIsInView(false);
+          if (ref.current) {
+            observer.unobserve(ref.current);
+          }
         }
       },
-      { threshold: 0.1, rootMargin: "-30px" }
+      { threshold: 0.05, rootMargin: "0px 0px -50px 0px" }
     );
 
     if (ref.current) {
       observer.observe(ref.current);
     }
 
-    const handleScroll = () => {
-      lastScrollY.current = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const curtainTargetY = direction === "down" ? "-100%" : "100%";
 
   return (
     <div ref={ref} className={`relative overflow-hidden group ${className}`}>
@@ -109,7 +79,7 @@ const CinematicImage = ({ src, alt, className = "", children }: { src: string, a
       <motion.div
         initial={{ scale: 1.12 }}
         animate={isInView ? { scale: 1 } : { scale: 1.12 }}
-        transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 z-0"
       >
         <Image src={src} alt={alt} fill className="object-cover" />
@@ -118,8 +88,8 @@ const CinematicImage = ({ src, alt, className = "", children }: { src: string, a
       {/* Cinematic Slide Curtain */}
       <motion.div
         initial={{ y: "0%" }}
-        animate={isInView ? { y: curtainTargetY } : { y: "0%" }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
+        animate={isInView ? { y: "-100%" } : { y: "0%" }}
+        transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
         className="absolute inset-0 z-10 bg-brand-wood dark:bg-zinc-800"
       />
       
@@ -243,7 +213,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            <h1 className="text-5xl md:text-7xl lg:text-[10rem] font-serif text-white tracking-wider leading-none mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[10rem] font-serif text-white tracking-wider leading-none mb-6">
               Akar <span className="block italic text-brand-gold mt-2">Tradisi.</span>
             </h1>
           </motion.div>
@@ -364,7 +334,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
       </section>
 
       {/* ─── Chapter 3: Large Quote Parallax ─── */}
-      <section ref={quoteRef} className="relative h-[80vh] w-full flex items-center justify-center overflow-hidden">
+      <section ref={quoteRef} className="relative h-[60vh] md:h-[80vh] w-full flex items-center justify-center overflow-hidden">
         <motion.div 
           style={{ y: quoteBgY, scale: quoteBgScale }} 
           className="absolute inset-0 bg-brand-dark"
@@ -381,7 +351,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           <RevealText>
             <div className="w-16 h-[1px] bg-brand-gold/50 mx-auto mb-8" />
-            <p className="text-3xl md:text-5xl lg:text-6xl font-serif text-white leading-relaxed font-light italic px-4">
+            <p className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-serif text-white leading-relaxed font-light italic px-4">
               "Kami tidak hanya membuat furnitur. Kami menciptakan <span className="text-brand-gold font-normal not-italic">warisan keluarga</span> yang akan diwariskan dari generasi ke generasi."
             </p>
             <div className="w-16 h-[1px] bg-brand-gold/50 mx-auto mt-8" />
@@ -396,7 +366,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
           <div ref={collageRef} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             {/* Left Column (5/12 width) - Large Image */}
             <motion.div style={{ y: leftY }} className="lg:col-span-5 flex flex-col gap-6">
-              <CinematicImage src="/images/products/kabinet-dapur.jpg" alt="Cabinet" className="h-[60vh] lg:h-[80vh] rounded-3xl shadow-2xl">
+              <CinematicImage src="/images/products/kabinet-dapur.jpg" alt="Cabinet" className="h-[45vh] md:h-[60vh] lg:h-[80vh] rounded-3xl shadow-2xl">
                 <div className="absolute bottom-6 left-6 z-10 text-white">
                   <p className="text-[10px] uppercase tracking-[0.25em] font-semibold opacity-80">Desain Kabinet</p>
                   <h4 className="text-xl font-serif mt-1">Kabinet Dapur Klasik</h4>
@@ -419,7 +389,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
               </RevealText>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
-                <CinematicImage src="/images/products/rak-dinding.jpg" alt="Shelf Details" className="h-[35vh] lg:h-[45vh] rounded-3xl shadow-xl">
+                <CinematicImage src="/images/products/rak-dinding.jpg" alt="Shelf Details" className="h-[30vh] md:h-[35vh] lg:h-[45vh] rounded-3xl shadow-xl">
                   <div className="absolute bottom-4 left-4 z-10 text-white">
                     <p className="text-[10px] uppercase tracking-[0.25em] font-semibold opacity-80">Interior Minimalis</p>
                     <h4 className="text-lg font-serif mt-1">Rak Dinding Melayang</h4>
@@ -427,7 +397,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 </CinematicImage>
 
-                <CinematicImage src="/images/products/drawer-vintage.jpg" alt="Drawer Details" className="h-[35vh] lg:h-[45vh] sm:mt-12 rounded-3xl shadow-xl">
+                <CinematicImage src="/images/products/drawer-vintage.jpg" alt="Drawer Details" className="h-[30vh] md:h-[35vh] lg:h-[45vh] sm:mt-12 rounded-3xl shadow-xl">
                   <div className="absolute bottom-4 left-4 z-10 text-white">
                     <p className="text-[10px] uppercase tracking-[0.25em] font-semibold opacity-80">Gaya Klasik</p>
                     <h4 className="text-lg font-serif mt-1">Drawer Vintage Jati</h4>
