@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search, ShoppingBag } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useCartStore } from "@/lib/store/cartStore";
 
 const navLinks = [
   { label: "Beranda", href: "/" },
@@ -19,6 +20,9 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const lastScrollY = useRef(0);
+  
+  const { items, toggleDrawer } = useCartStore();
+  const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
   
   const [mounted, setMounted] = useState(false);
 
@@ -118,6 +122,20 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
               >
                 <Search className="w-5 h-5" />
               </button>
+              
+              <button 
+                onClick={() => toggleDrawer(true)}
+                className="relative text-brand-light hover:text-brand-gold transition-colors p-2"
+                aria-label="Cart"
+              >
+                <ShoppingBag className="w-5 h-5" />
+                {mounted && cartCount > 0 && (
+                  <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[9px] font-bold text-brand-dark animate-pulse">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+
               <ThemeToggle className="relative text-brand-light hover:text-brand-gold transition-colors p-2" />
             </li>
           </ul>
@@ -131,6 +149,20 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
             >
               <Search className="w-5 h-5" />
             </button>
+
+            <button 
+              onClick={() => toggleDrawer(true)}
+              className="relative text-brand-light hover:text-brand-gold transition-colors p-2"
+              aria-label="Cart"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {mounted && cartCount > 0 && (
+                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[9px] font-bold text-brand-dark">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
             <ThemeToggle className="relative text-brand-light hover:text-brand-gold transition-colors p-2" />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -201,50 +233,45 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
         </div>
       </div>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu backdrop overlay */}
+      {mobileOpen && (
+        <div 
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile menu sliding side-drawer */}
       <div
-        className={`fixed inset-0 z-40 bg-brand-light dark:bg-brand-dark transition-all duration-500 md:hidden ${
-          mobileOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
+        className={`fixed top-0 right-0 bottom-0 z-40 w-72 max-w-[80vw] bg-brand-wood dark:bg-zinc-900 text-brand-light shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
+          mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex h-full flex-col items-center justify-center gap-8">
-          {navLinks.map((link, i) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="overflow-hidden"
-            >
-              <span
-                className={`block font-serif text-4xl tracking-wide text-brand-dark dark:text-brand-light transition-all duration-500 hover:text-brand-gold ${
-                  mobileOpen
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-8 opacity-0"
-                }`}
-                style={{ transitionDelay: `${150 + i * 75}ms` }}
-              >
-                {link.label}
-              </span>
-            </Link>
-          ))}
+        <div className="flex flex-col h-full pt-24 px-6 pb-8 justify-between">
+          <div className="flex flex-col gap-6">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-gold/60">Navigasi</p>
+            <nav className="flex flex-col gap-5">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="font-serif text-2xl tracking-wide text-brand-light hover:text-brand-gold transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
-          {/* Mobile CTA */}
-          <div
-            className={`mt-4 flex flex-col items-center gap-4 transition-all duration-500 ${
-              mobileOpen
-                ? "translate-y-0 opacity-100"
-                : "translate-y-8 opacity-0"
-            }`}
-            style={{ transitionDelay: "375ms" }}
-          >
+          <div className="flex flex-col gap-3">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-gold/60">Tindakan Cepat</p>
             <a
               href={customOrderLink}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="rounded-full bg-brand-gold px-10 py-3 text-sm font-semibold tracking-wide text-brand-dark transition-all duration-500 hover:scale-105"
+              className="w-full text-center rounded-xl bg-brand-gold px-6 py-3 text-sm font-semibold tracking-wide text-brand-dark hover:bg-brand-light transition-all"
             >
               Custom Order
             </a>
@@ -252,7 +279,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-brand-wood/30 px-10 py-3 text-sm tracking-wide text-brand-dark dark:text-brand-light transition-all duration-500 hover:bg-brand-wood hover:text-brand-light"
+              className="w-full text-center rounded-xl border border-brand-light/20 px-6 py-3 text-sm tracking-wide text-brand-light hover:bg-white/10 transition-all"
             >
               Hubungi WhatsApp
             </a>

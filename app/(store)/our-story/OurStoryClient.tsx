@@ -7,25 +7,60 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-mot
 import { Sparkles, Hammer, Award, Warehouse } from "lucide-react";
 import PageEntranceSplash from "@/components/PageEntranceSplash";
 
+// ─── Custom Hook to Track Scroll Direction ───────────────────────────
+function useScrollDirection() {
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (Math.abs(currentScrollY - lastScrollY.current) > 5) {
+        if (currentScrollY > lastScrollY.current) {
+          setScrollDirection("down");
+        } else if (currentScrollY < lastScrollY.current) {
+          setScrollDirection("up");
+        }
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return scrollDirection;
+}
+
 // ─── Reusable Animated Components ────────────────────────────────────
-const RevealText = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
-    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 1, delay, ease: [0.16, 1, 0.3, 1] }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-);
+const RevealText = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => {
+  const scrollDirection = useScrollDirection();
+  // Slide up on scroll down, slide down on scroll up
+  const initialY = scrollDirection === "down" ? 50 : -50;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: initialY, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: false, margin: "-50px" }}
+      transition={{ duration: 1, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 const CinematicImage = ({ src, alt, className = "", children }: { src: string, alt: string, className?: string, children?: React.ReactNode }) => {
+  const scrollDirection = useScrollDirection();
+  // Curtain slides up to reveal on scroll down, slides down to reveal on scroll up
+  const curtainTargetY = scrollDirection === "down" ? "-100%" : "100%";
+
   return (
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
+      viewport={{ once: false, margin: "-50px" }}
       className={`relative overflow-hidden group ${className}`}
     >
       {/* Zoom-out revealing image */}
@@ -42,12 +77,12 @@ const CinematicImage = ({ src, alt, className = "", children }: { src: string, a
         <Image src={src} alt={alt} fill className="object-cover" />
       </motion.div>
 
-      {/* Cinematic Slide Curtain (highly compatible slide-up overlay) */}
+      {/* Cinematic Slide Curtain */}
       <motion.div
         variants={{
           hidden: { y: "0%" },
           visible: { 
-            y: "-100%",
+            y: curtainTargetY,
             transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.05 }
           }
         }}

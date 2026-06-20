@@ -1,6 +1,8 @@
 import Navbar from "@/components/layout/Navbar";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { MapPin, Clock, Mail, Phone } from "lucide-react";
+import FloatingCart from "@/components/ui/FloatingCart";
 
 export default async function StoreLayout({
   children,
@@ -29,6 +31,7 @@ export default async function StoreLayout({
     <>
       <Navbar customOrderLink={customOrderLink} waLink={`https://wa.me/${waNumberClean}`} />
       <main>{children}</main>
+      <FloatingCart />
 
       {/* ─── Footer ─── */}
       <footer className="border-t border-brand-wood/10 bg-brand-dark text-brand-light">
@@ -51,8 +54,8 @@ export default async function StoreLayout({
               </p>
             </div>
 
-            {/* Navigation */}
-            <div className="flex flex-col items-center md:items-start">
+            {/* Navigation (Desktop Only) */}
+            <div className="hidden md:flex flex-col items-start">
               <h4 className="text-xs font-medium uppercase tracking-[0.2em] text-brand-light">
                 Navigasi
               </h4>
@@ -76,44 +79,85 @@ export default async function StoreLayout({
             </div>
 
             {/* Contact */}
-            <div className="flex flex-col items-center md:items-start">
-              <h4 className="text-xs font-medium uppercase tracking-[0.2em] text-brand-light">
+            <div className="flex flex-col items-center md:items-start w-full md:w-auto">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-gold">
                 Hubungi Kami
               </h4>
-              <ul className="mt-4 space-y-3 text-sm text-brand-light/70 flex flex-col items-center md:items-start">
-                <li>Workshop: {workshop}</li>
-                <li>Jam Operasional: {jamBuka}</li>
-                <li>
-                  WhatsApp:{" "}
-                  <a
-                    href={`https://wa.me/${waNumberClean}`}
-                    className="transition-colors duration-300 hover:text-brand-gold"
-                  >
-                    +{waNumberRaw.replace(/(\d{2})(\d{3})(\d{4})(\d{4})/, '$1 $2-$3-$4')}
-                  </a>
-                </li>
-                <li>
-                  Email:{" "}
-                  <a
-                    href={`mailto:${email}`}
-                    className="transition-colors duration-300 hover:text-brand-gold"
-                  >
-                    {email}
-                  </a>
-                </li>
-                <li className="pt-4 flex flex-wrap gap-4">
+              
+              <div className="mt-6 flex flex-col gap-6 items-center md:items-start w-full max-w-md">
+                {/* Visual Opening Hours Card */}
+                <div className="w-full bg-white/[0.03] border border-brand-gold/15 hover:border-brand-gold/35 rounded-2xl p-5 transition-all duration-300 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-brand-gold/5 rounded-full blur-xl pointer-events-none group-hover:bg-brand-gold/10 transition-colors" />
+                  <div className="flex items-center gap-4">
+                    <span className="p-3 bg-brand-gold/10 rounded-xl text-brand-gold shrink-0">
+                      <Clock className="w-5 h-5 animate-pulse" />
+                    </span>
+                    <div className="text-left">
+                      <div className="flex items-center gap-2">
+                        <p className="text-[10px] uppercase tracking-wider text-brand-gold/80 font-bold">Jam Operasional</p>
+                        <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-semibold text-emerald-400 ring-1 ring-inset ring-emerald-500/20">
+                          Buka
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-brand-light font-semibold leading-snug">{jamBuka}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Other contacts stack */}
+                <div className="w-full flex flex-col gap-4 text-sm text-brand-light/70">
+                  {/* Workshop */}
+                  <div className="flex items-start gap-3 text-left w-full">
+                    <span className="mt-0.5 p-2 bg-white/5 rounded-lg text-brand-gold shrink-0"><MapPin className="w-4 h-4" /></span>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-white/40 font-bold">Workshop</p>
+                      <p className="mt-0.5 text-brand-light/90 font-medium leading-relaxed">{workshop}</p>
+                    </div>
+                  </div>
+
+                  {/* WhatsApp */}
+                  <div className="flex items-start gap-3 text-left w-full">
+                    <span className="mt-0.5 p-2 bg-white/5 rounded-lg text-brand-gold shrink-0"><Phone className="w-4 h-4" /></span>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-white/40 font-bold">WhatsApp</p>
+                      <a
+                        href={`https://wa.me/${waNumberClean}`}
+                        className="mt-0.5 block text-brand-light/90 hover:text-brand-gold transition-colors font-medium"
+                      >
+                        +{waNumberRaw.replace(/(\d{2})(\d{3})(\d{4})(\d{4})/, '$1 $2-$3-$4')}
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex items-start gap-3 text-left w-full">
+                    <span className="mt-0.5 p-2 bg-white/5 rounded-lg text-brand-gold shrink-0"><Mail className="w-4 h-4" /></span>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-white/40 font-bold">Email</p>
+                      <a
+                        href={`mailto:${email}`}
+                        className="mt-0.5 block text-brand-light/90 hover:text-brand-gold transition-colors font-medium break-all"
+                      >
+                        {email}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Social Media Links */}
+                <div className="pt-2 flex flex-wrap gap-4 w-full justify-center md:justify-start">
                   {instagram && (
-                    <a href={instagram} target="_blank" className="p-2 bg-brand-wood/10 rounded-full hover:bg-brand-gold hover:text-white transition-all transform hover:scale-110" aria-label="Instagram">
+                    <a href={instagram} target="_blank" className="p-2.5 bg-brand-wood/10 rounded-full hover:bg-brand-gold hover:text-white transition-all transform hover:scale-110" aria-label="Instagram">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.88z"/></svg>
                     </a>
                   )}
                   {tiktok && (
-                    <a href={tiktok} target="_blank" className="p-2 bg-brand-wood/10 rounded-full hover:bg-brand-gold hover:text-white transition-all transform hover:scale-110" aria-label="TikTok">
+                    <a href={tiktok} target="_blank" className="p-2.5 bg-brand-wood/10 rounded-full hover:bg-brand-gold hover:text-white transition-all transform hover:scale-110" aria-label="TikTok">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 448 512"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></svg>
                     </a>
                   )}
                   {tokopedia && (
-                    <a href={tokopedia} target="_blank" className="p-2 bg-brand-wood/10 rounded-full hover:bg-[#42B549] hover:text-white transition-all transform hover:scale-110 flex items-center justify-center" aria-label="Tokopedia">
+                    <a href={tokopedia} target="_blank" className="p-2.5 bg-brand-wood/10 rounded-full hover:bg-[#42B549] hover:text-white transition-all transform hover:scale-110 flex items-center justify-center" aria-label="Tokopedia">
                       <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                         <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" d="M27.043 12.942c-3.43-2.897-16.85-2.247-16.85-2.247l-.473 32.65s17.855.134 23.353 0s9.341-4.508 9.4-7.878s0-24.18 0-24.18c-6.858-.829-11.942-.178-15.43 1.655"/>
                         <circle cx="19.531" cy="24.172" r="6.976" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
@@ -124,14 +168,14 @@ export default async function StoreLayout({
                     </a>
                   )}
                   {shopee && (
-                    <a href={shopee} target="_blank" className="p-2 bg-brand-wood/10 rounded-full hover:bg-[#EE4D2D] hover:text-white transition-all transform hover:scale-110 flex items-center justify-center" aria-label="Shopee">
+                    <a href={shopee} target="_blank" className="p-2.5 bg-brand-wood/10 rounded-full hover:bg-[#EE4D2D] hover:text-white transition-all transform hover:scale-110 flex items-center justify-center" aria-label="Shopee">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M15.9414 17.9633c.229-1.879-.981-3.077-4.1758-4.0969-1.548-.528-2.277-1.22-2.26-2.1719.065-1.056 1.048-1.825 2.352-1.85a5.2898 5.2898 0 0 1 2.8838.89c.116.072.197.06.263-.039.09-.145.315-.494.39-.62.051-.081.061-.187-.068-.281-.185-.1369-.704-.4149-.983-.5319a6.4697 6.4697 0 0 0-2.5118-.514c-1.909.008-3.4129 1.215-3.5389 2.826-.082 1.1629.494 2.1078 1.73 2.8278.262.152 1.6799.716 2.2438.892 1.774.552 2.695 1.5419 2.478 2.6969-.197 1.047-1.299 1.7239-2.818 1.7439-1.2039-.046-2.2878-.537-3.1278-1.19l-.141-.11c-.104-.08-.218-.075-.287.03-.05.077-.376.547-.458.67-.077.108-.035.168.045.234.35.293.817.613 1.134.775a6.7097 6.7097 0 0 0 2.8289.727 4.9048 4.9048 0 0 0 2.0759-.354c1.095-.465 1.8029-1.394 1.9449-2.554zM11.9986 1.4009c-2.068 0-3.7539 1.95-3.8329 4.3899h7.6657c-.08-2.44-1.765-4.3899-3.8328-4.3899zm7.8516 22.5981-.08.001-15.7843-.002c-1.074-.04-1.863-.91-1.971-1.991l-.01-.195L1.298 6.2858a.459.459 0 0 1 .45-.494h4.9748C6.8448 2.568 9.1607 0 11.9996 0c2.8388 0 5.1537 2.5689 5.2757 5.7898h4.9678a.459.459 0 0 1 .458.483l-.773 15.5883-.007.131c-.094 1.094-.979 1.9769-2.0709 2.0059z"/>
                       </svg>
                     </a>
                   )}
-                </li>
-              </ul>
+                </div>
+              </div>
             </div>
           </div>
 

@@ -109,7 +109,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
   const shopee = links.find((l: any) => l.platform.toLowerCase() === "shopee");
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16 pb-24 lg:pb-0">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16 pb-32 lg:pb-12">
       {/* Left: Image Gallery */}
       <div className="lg:col-span-7">
         <div className="relative lg:sticky top-0 lg:top-24 space-y-4 lg:space-y-6">
@@ -144,6 +144,11 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
                   <Image src={img} alt={`${product.name} ${idx + 1}`} fill className="object-cover" priority={idx === 0} />
                 </div>
               ))}
+            </div>
+
+            {/* Mobile: Image Counter Badge */}
+            <div className="absolute bottom-4 right-4 z-10 lg:hidden px-3 py-1 bg-black/60 text-white text-[10px] font-semibold rounded-full backdrop-blur-md border border-white/10 tracking-wider">
+              {displayImages.indexOf(activeImage) + 1} / {displayImages.length}
             </div>
 
             {images.length > 1 && (
@@ -185,7 +190,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
           <div className="flex lg:hidden items-center justify-center w-full mt-2">
             <button
               onClick={() => openLightbox(images.indexOf(activeImage) >= 0 ? images.indexOf(activeImage) : 0)}
-              className="w-full flex h-12 items-center justify-center gap-2 rounded-xl border border-brand-wood/20 dark:border-white/10 text-brand-dark dark:text-brand-light text-sm font-medium hover:bg-brand-wood/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-300"
+              className="w-full flex h-11 items-center justify-center gap-2 rounded-xl border border-brand-wood/20 dark:border-white/10 text-brand-dark dark:text-brand-light text-xs font-medium hover:bg-brand-wood/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-300"
             >
               <Maximize2 className="w-4 h-4" /> Buka Layar Penuh
             </button>
@@ -348,6 +353,42 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
         onNext={() => setLightboxIndex((prev) => (prev + 1) % Math.max(1, images.length))}
         onPrev={() => setLightboxIndex((prev) => (prev - 1 + Math.max(1, images.length)) % Math.max(1, images.length))}
       />
+
+      {/* Sticky Bottom Actions Bar (Mobile Only) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-zinc-950 border-t border-brand-wood/10 dark:border-white/10 px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+        {/* WhatsApp Icon Button */}
+        <a 
+          href={whatsappHref} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="p-3 border border-brand-wood/20 dark:border-white/10 rounded-xl text-brand-dark dark:text-brand-light hover:bg-brand-wood/5 dark:hover:bg-white/5 flex items-center justify-center shrink-0"
+          aria-label="Tanya WhatsApp"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.167 1.452 4.836 1.453 5.488 0 9.954-4.468 9.957-9.96.002-2.66-1.033-5.159-2.914-7.04C16.643 1.727 14.148.692 11.49.692 6.003.692 1.537 5.161 1.535 10.652c-.001 1.77.464 3.498 1.348 5.03l-.997 3.642 3.761-.986z"/>
+          </svg>
+        </a>
+
+        {/* Quantity Selector */}
+        <div className="flex items-center border border-brand-wood/20 dark:border-white/10 rounded-xl h-11 px-1 bg-brand-cream/35 dark:bg-black/25 shrink-0">
+          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-2 text-brand-dark dark:text-brand-light">
+            <Minus className="w-3 h-3" />
+          </button>
+          <span className="w-5 text-center text-xs font-semibold text-brand-dark dark:text-brand-light">{quantity}</span>
+          <button onClick={() => setQuantity(quantity + 1)} className="p-2 text-brand-dark dark:text-brand-light">
+            <Plus className="w-3 h-3" />
+          </button>
+        </div>
+
+        {/* Add to Cart Button */}
+        <button 
+          onClick={handleQuickAdd}
+          className="flex-1 h-11 bg-brand-dark dark:bg-brand-light text-white dark:text-brand-dark font-semibold tracking-wider uppercase text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-300"
+        >
+          <ShoppingBag className="w-3.5 h-3.5" />
+          <span>Beli</span>
+        </button>
+      </div>
     </div>
   );
 }

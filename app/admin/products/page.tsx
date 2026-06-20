@@ -103,8 +103,9 @@ export default async function AdminProductsPage({ searchParams }: Props) {
             <ProductSearch />
           </div>
           
-          <div className="overflow-x-auto flex-1">
-            <table className="w-full text-left border-collapse whitespace-nowrap min-w-[600px]">
+          {/* Desktop Table View */}
+          <div className="hidden sm:block overflow-x-auto flex-1">
+            <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead>
                 <tr className="bg-white dark:bg-zinc-900 text-xs text-brand-dark dark:text-brand-light border-b border-[#EAEAEA] dark:border-zinc-800 uppercase tracking-wider">
                   <th className="p-4 font-semibold pl-6">Product</th>
@@ -194,6 +195,84 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card List View */}
+          <div className="block sm:hidden divide-y divide-[#EAEAEA] dark:divide-zinc-800">
+            {products.length === 0 ? (
+              <div className="p-8 text-center text-brand-dark dark:text-brand-light">
+                <Package className="w-8 h-8 opacity-20 mx-auto mb-2" />
+                <p>No products found. Add one to get started.</p>
+              </div>
+            ) : (
+              products.map((product: any) => (
+                <div key={product.id} className="p-4 flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="relative h-12 w-12 shrink-0 rounded-lg overflow-hidden border border-[#EAEAEA] dark:border-zinc-700 bg-white dark:bg-zinc-800">
+                      <Image src={getPrimaryImage(product.images)} alt={product.name} fill className="object-cover" unoptimized />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-sm text-brand-dark dark:text-zinc-100 break-words leading-tight">{product.name}</h4>
+                      <p className="text-xs text-brand-dark/60 dark:text-zinc-400 mt-1">{product.category}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-1">
+                    <div className="flex flex-col gap-1">
+                      <p className="text-[10px] text-brand-dark/50 dark:text-zinc-500 font-bold uppercase tracking-wider">Harga & Stock</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-brand-dark dark:text-zinc-100">Rp {product.price.toLocaleString("id-ID")}</span>
+                        <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold ${product.stock <= 5 ? "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 ring-1 ring-inset ring-red-600/20" : "bg-gray-50 dark:bg-zinc-800 text-brand-dark dark:text-brand-light ring-1 ring-inset ring-gray-500/10"}`}>
+                          {product.stock} left
+                        </span>
+                      </div>
+                    </div>
+
+                    <form action={toggleProductStatus.bind(null, product.id)}>
+                      <button
+                        type="submit"
+                        className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full transition-all ${
+                          product.status === "PUBLISHED"
+                            ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                            : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300"
+                        }`}
+                      >
+                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${product.status === "PUBLISHED" ? "bg-emerald-500" : "bg-gray-400"}`} />
+                        {product.status}
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-dashed border-[#EAEAEA] dark:border-zinc-850">
+                    <QuickEditButton product={{ id: product.id, name: product.name, price: product.price, stock: product.stock }} />
+                    <Link
+                      href={`/product/${product.slug}`}
+                      target="_blank"
+                      className="inline-flex p-2 text-brand-dark dark:text-brand-light hover:bg-[#F5F5F5] dark:hover:bg-zinc-800 rounded-lg border border-[#EAEAEA] dark:border-zinc-800"
+                      title="Quick View Frontend"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </Link>
+                    <Link
+                      href={`/admin/edit/${product.id}`}
+                      className="inline-flex p-2 text-brand-dark dark:text-brand-light hover:bg-[#F5F5F5] dark:hover:bg-zinc-800 rounded-lg border border-[#EAEAEA] dark:border-zinc-800"
+                      title="Edit Product"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Link>
+                    <form action={softDeleteProduct.bind(null, product.id)}>
+                      <button
+                        type="submit"
+                        className="inline-flex p-2 text-red-650 hover:bg-red-55 dark:hover:bg-red-500/10 rounded-lg border border-red-100 dark:border-red-950"
+                        title="Move to Trash"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
 
           {/* Table Pagination Footer */}
