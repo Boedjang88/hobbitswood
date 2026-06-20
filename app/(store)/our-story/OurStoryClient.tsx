@@ -20,24 +20,50 @@ const RevealText = ({ children, delay = 0, className = "" }: { children: React.R
   </motion.div>
 );
 
-const CinematicImage = ({ src, alt, className = "", children }: { src: string, alt: string, className?: string, children?: React.ReactNode }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 1.05, y: 15 }}
-    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-    className={`relative overflow-hidden group ${className}`}
-  >
-    <motion.div 
-      className="absolute inset-0 z-0"
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+const CinematicImage = ({ src, alt, className = "", children }: { src: string, alt: string, className?: string, children?: React.ReactNode }) => {
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }}
+      className={`relative overflow-hidden group ${className}`}
     >
-      <Image src={src} alt={alt} fill className="object-cover transition-all duration-700" />
+      {/* Zoom-out revealing image */}
+      <motion.div
+        variants={{
+          hidden: { scale: 1.15 },
+          visible: { 
+            scale: 1,
+            transition: { duration: 1.6, ease: [0.16, 1, 0.3, 1] }
+          }
+        }}
+        className="absolute inset-0 z-0"
+      >
+        <Image src={src} alt={alt} fill className="object-cover" />
+      </motion.div>
+
+      {/* Cinematic Slide Curtain (highly compatible slide-up overlay) */}
+      <motion.div
+        variants={{
+          hidden: { y: "0%" },
+          visible: { 
+            y: "-100%",
+            transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.05 }
+          }
+        }}
+        className="absolute inset-0 z-10 bg-brand-wood dark:bg-zinc-800"
+      />
+      
+      {/* Dark gradient for caption readability */}
+      <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+      {/* Captions/Details */}
+      <div className="relative z-30 h-full w-full">
+        {children}
+      </div>
     </motion.div>
-    {children}
-  </motion.div>
-);
+  );
+};
 
 export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: string }) {
   const containerRef = useRef<HTMLElement>(null);
