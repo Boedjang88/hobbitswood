@@ -19,7 +19,10 @@ async function main() {
       price: 150000,
       category: "Figura",
       images: JSON.stringify([
-        "/images/products/figura-jati.jpg"
+        "/images/products/figura-jati.jpg",
+        "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1580136579312-94651dfd596d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Figura foto berbahan dasar kayu jati solid dengan finishing natural yang menonjolkan urat kayu. Cocok untuk memajang memori berharga, sertifikat, maupun karya seni Anda dengan nuansa klasik dan elegan.",
       dimensions: JSON.stringify(["Ukuran 4R", "Ukuran 5R", "Ukuran 8R", "Ukuran 10R"]),
@@ -38,7 +41,9 @@ async function main() {
       price: 185000,
       category: "Figura",
       images: JSON.stringify([
-        "/images/products/figura-rustic.jpg"
+        "/images/products/figura-rustic.jpg",
+        "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1544273677-c433136021d4?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Membawa kesan hangat dengan desain rustic yang dibiarkan alami tanpa cat berlebih. Sangat cocok untuk dekorasi dinding ruang tamu atau kamar tidur bernuansa vintage.",
       dimensions: JSON.stringify(["Ukuran A4", "Ukuran A3"]),
@@ -58,7 +63,11 @@ async function main() {
       price: 4500000,
       category: "Display",
       images: JSON.stringify([
-        "/images/products/etalase-kaca.jpg"
+        "/images/products/etalase-kaca.jpg",
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Etalase kaca elegan dengan rangka kayu sungkai solid. Sangat cocok digunakan sebagai lemari pajangan koleksi kesayangan di ruang tamu, atau sebagai display produk premium di toko Anda. Dilengkapi dengan lampu sorot LED hangat.",
       dimensions: JSON.stringify(["P 80cm x L 40cm x T 180cm", "P 120cm x L 40cm x T 180cm"]),
@@ -76,7 +85,10 @@ async function main() {
       price: 850000,
       category: "Display",
       images: JSON.stringify([
-        "/images/products/display-bazar.jpg"
+        "/images/products/display-bazar.jpg",
+        "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1565183997392-2f6f122e5912?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Rak display portabel yang sangat mudah dilipat dan dibawa untuk keperluan pameran atau bazar. Terbuat dari kayu ringan namun kokoh, memberikan kesan estetik dan natural pada produk jualan Anda.",
       dimensions: JSON.stringify(["Tinggi 120cm x Lebar 60cm"]),
@@ -96,7 +108,10 @@ async function main() {
       price: 2100000,
       category: "Rak",
       images: JSON.stringify([
-        "/images/products/rak-buku.jpg"
+        "/images/products/rak-buku.jpg",
+        "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1594620302200-9a762244a156?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Rak buku susun bergaya industrial minimalis. Perpaduan sempurna antara kehangatan kayu jati alami dan rangka besi hitam yang kokoh. Mampu menahan beban buku berat hingga 30kg per tingkat rak.",
       dimensions: JSON.stringify(["Tingkat 3 (Tinggi 110cm)", "Tingkat 4 (Tinggi 145cm)", "Tingkat 5 (Tinggi 180cm)"]),
@@ -114,7 +129,9 @@ async function main() {
       price: 250000,
       category: "Rak",
       images: JSON.stringify([
-        "/images/products/rak-dinding.jpg"
+        "/images/products/rak-dinding.jpg",
+        "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Rak dinding minimalis (floating shelf) tanpa siku penahan yang terlihat. Memberikan kesan bersih, luas, dan modern pada dinding rumah Anda. Pemasangan sangat mudah, lengkap dengan sekrup dan fischer tersembunyi.",
       dimensions: JSON.stringify(["Panjang 40cm", "Panjang 60cm", "Panjang 80cm", "Panjang 100cm"]),
@@ -133,7 +150,10 @@ async function main() {
       price: 1450000,
       category: "Rak",
       images: JSON.stringify([
-        "/images/products/rak-sepatu.jpg"
+        "/images/products/rak-sepatu.jpg",
+        "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1551298370-9d3d53740c72?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Menyimpan koleksi sepatu dengan rapi dan bebas debu. Dilengkapi ventilasi udara kecil di bagian belakang untuk mencegah bau dan kelembapan. Desain mungil yang cocok ditempatkan di dekat pintu masuk.",
       dimensions: JSON.stringify(["P 80cm x L 35cm x T 100cm (Kapasitas 12 Pasang)"]),
@@ -153,7 +173,11 @@ async function main() {
       price: 8900000,
       category: "Lemari",
       images: JSON.stringify([
-        "/images/products/lemari-3-pintu.jpg"
+        "/images/products/lemari-3-pintu.jpg",
+        "https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1597075687490-8f673c6c17f6?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Lemari pakaian desain retro dengan ruang penyimpanan luas. Dibuat menggunakan kayu mahoni pilihan yang telah melalui proses oven (kiln-dry) sehingga anti rayap dan tidak mudah memuai. Dilengkapi laci rahasia di bagian dalam.",
       dimensions: JSON.stringify(["P 160cm x L 60cm x T 200cm"]),
@@ -172,7 +196,10 @@ async function main() {
       price: 6200000,
       category: "Lemari",
       images: JSON.stringify([
-        "/images/products/kabinet-dapur.jpg"
+        "/images/products/kabinet-dapur.jpg",
+        "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1556909206-d5306cf536d2?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Mempercantik area dapur dengan kabinet berbahan kayu solid yang dirancang khusus tahan terhadap cipratan air dan minyak ringan. Terdapat banyak kompartemen untuk menyimpan alat masak dan piring.",
       dimensions: JSON.stringify(["P 120cm x L 50cm x T 85cm (Base Cabinet)"]),
@@ -190,7 +217,10 @@ async function main() {
       price: 3400000,
       category: "Lemari",
       images: JSON.stringify([
-        "/images/products/drawer-vintage.jpg"
+        "/images/products/drawer-vintage.jpg",
+        "https://images.unsplash.com/photo-1532372320978-9b4d6a3a854c?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Lemari berlaci lima susun dengan ukiran vintage pada sudutnya. Sangat praktis untuk mengorganisir pakaian lipat, dokumen, atau aksesoris. Menggunakan rel laci berkualitas yang meluncur mulus.",
       dimensions: JSON.stringify(["P 60cm x L 45cm x T 110cm"]),

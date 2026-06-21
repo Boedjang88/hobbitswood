@@ -215,104 +215,102 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
       {/* Mobile menu backdrop overlay */}
       {mobileOpen && (
         <div 
-          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs md:hidden"
+          className="lg:hidden fixed inset-0 bg-black/20 dark:bg-black/40 z-40 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Mobile menu sliding side-drawer */}
-      <div
-        className={`fixed top-0 right-0 bottom-0 z-40 w-[280px] max-w-[85vw] bg-white dark:bg-zinc-900 text-brand-dark dark:text-zinc-100 border-l border-[#EAEAEA] dark:border-zinc-800 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
-          mobileOpen ? "translate-x-0" : "translate-x-full"
+      {/* Mobile menu sliding side-drawer (LEFT, like /admin) */}
+      <aside
+        className={`fixed top-0 left-0 bottom-0 z-50 w-[280px] max-w-[85vw] bg-white dark:bg-zinc-900 text-brand-dark dark:text-zinc-100 border-r border-[#EAEAEA] dark:border-zinc-800 shadow-2xl md:hidden transition-transform duration-300 ease-in-out ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full pt-20 pb-6">
-          
-          {/* Logo / Header Area */}
-          <div className="flex items-center justify-between px-6 pb-6 border-b border-[#EAEAEA] dark:border-zinc-800">
+        <div className="flex flex-col h-full">
+
+          {/* Sidebar Header */}
+          <div className="flex items-center justify-between px-4 py-4 border-b border-[#EAEAEA] dark:border-zinc-800">
             <div className="flex items-center gap-3">
               <div className="relative w-8 h-8 flex-shrink-0">
                 <Image 
                   src="/images/hobbits-wood-logo.svg" 
                   alt="Hobbits Wood Logo" 
                   fill 
-                  className="object-contain dark:invert" 
+                  className="object-contain" 
                 />
               </div>
               <span className="font-serif font-bold text-base text-brand-dark dark:text-zinc-100">Hobbits Wood</span>
             </div>
             <button 
               onClick={() => setMobileOpen(false)}
-              className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-brand-dark/60 dark:text-zinc-400"
+              className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-brand-dark/60 dark:text-zinc-400 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Drawer Navigation Links */}
+          {/* Navigation Links */}
           <div className="flex-1 px-4 py-6 overflow-y-auto space-y-6">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-brand-dark/50 dark:text-zinc-500 mb-3 px-2">Menu Utama</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-brand-dark/40 dark:text-zinc-500 mb-3 px-2">Menu Utama</p>
               <nav className="space-y-1">
                 <Link
                   href="/"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all group text-[#444] dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-brand-dark dark:hover:text-white"
                 >
-                  <Home className="h-[18px] w-[18px] text-brand-gold shrink-0" />
+                  <Home className="h-5 w-5 text-brand-dark dark:text-brand-light group-hover:text-brand-dark dark:group-hover:text-zinc-100 shrink-0" />
                   <span>Beranda</span>
                 </Link>
                 <Link
                   href="/shop"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all group text-[#444] dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-brand-dark dark:hover:text-white"
                 >
-                  <ShoppingBag className="h-[18px] w-[18px] text-brand-gold shrink-0" />
+                  <ShoppingBag className="h-5 w-5 text-brand-dark dark:text-brand-light group-hover:text-brand-dark dark:group-hover:text-zinc-100 shrink-0" />
                   <span>Katalog</span>
                 </Link>
                 <Link
                   href="/our-story"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all group text-[#444] dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-brand-dark dark:hover:text-white"
                 >
-                  <BookOpen className="h-[18px] w-[18px] text-brand-gold shrink-0" />
+                  <BookOpen className="h-5 w-5 text-brand-dark dark:text-brand-light group-hover:text-brand-dark dark:group-hover:text-zinc-100 shrink-0" />
                   <span>Cerita Kami</span>
                 </Link>
                 <Link
                   href="/faq"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300"
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all group text-[#444] dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-brand-dark dark:hover:text-white"
                 >
-                  <HelpCircle className="h-[18px] w-[18px] text-brand-gold shrink-0" />
+                  <HelpCircle className="h-5 w-5 text-brand-dark dark:text-brand-light group-hover:text-brand-dark dark:group-hover:text-zinc-100 shrink-0" />
                   <span>Bantuan & FAQ</span>
                 </Link>
               </nav>
             </div>
 
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-brand-dark/50 dark:text-zinc-500 mb-3 px-2">Belanja</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-brand-dark/40 dark:text-zinc-500 mb-3 px-2">Belanja</p>
               <nav className="space-y-1">
-                {/* Search */}
                 <button
                   onClick={() => {
                     setMobileOpen(false);
                     setSearchOpen(true);
                   }}
-                  className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300 text-left"
+                  className="w-full flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all group text-[#444] dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-brand-dark dark:hover:text-white text-left"
                 >
-                  <Search className="h-[18px] w-[18px] text-brand-gold shrink-0" />
+                  <Search className="h-5 w-5 text-brand-dark dark:text-brand-light group-hover:text-brand-dark dark:group-hover:text-zinc-100 shrink-0" />
                   <span>Cari Produk</span>
                 </button>
-                {/* Cart */}
                 <button
                   onClick={() => {
                     setMobileOpen(false);
                     toggleDrawer(true);
                   }}
-                  className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-black/5 dark:hover:bg-white/10 text-[#444] dark:text-zinc-300 text-left"
+                  className="w-full flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all group text-[#444] dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-brand-dark dark:hover:text-white text-left"
                 >
                   <div className="relative">
-                    <ShoppingBag className="h-[18px] w-[18px] text-brand-gold shrink-0" />
+                    <ShoppingBag className="h-5 w-5 text-brand-dark dark:text-brand-light group-hover:text-brand-dark dark:group-hover:text-zinc-100 shrink-0" />
                     {mounted && cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-gold text-[8px] font-bold text-brand-dark">
                         {cartCount}
@@ -332,7 +330,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="w-full flex justify-center items-center gap-2 p-2.5 bg-[#111] dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl text-xs font-semibold hover:opacity-95 shadow-sm transition-all"
+              className="w-full flex justify-center items-center gap-2 p-3 bg-[#111] dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl text-xs font-semibold hover:opacity-95 shadow-sm transition-all"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Custom Order</span>
@@ -342,14 +340,14 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="w-full flex justify-center items-center gap-2 p-2.5 border border-[#EAEAEA] dark:border-zinc-800 hover:bg-black/5 dark:hover:bg-white/10 text-brand-dark dark:text-zinc-300 rounded-xl text-xs font-semibold transition-all"
+              className="w-full flex justify-center items-center gap-2 p-3 border border-[#EAEAEA] dark:border-zinc-800 hover:bg-black/5 dark:hover:bg-white/10 text-brand-dark dark:text-zinc-300 rounded-xl text-xs font-semibold transition-all"
             >
               <Phone className="w-4 h-4 text-brand-gold" />
               <span>Hubungi WhatsApp</span>
             </a>
           </div>
         </div>
-      </div>
+      </aside>
     </>
   );
 }

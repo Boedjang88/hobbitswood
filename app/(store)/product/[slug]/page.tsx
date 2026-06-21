@@ -114,7 +114,7 @@ export default async function ProductDetailPage(props: ProductPageProps) {
   };
 
   return (
-    <div className="page-enter">
+    <>
       {/* JSON-LD Script */}
       <script
         type="application/ld+json"
@@ -168,6 +168,6 @@ export default async function ProductDetailPage(props: ProductPageProps) {
           </div>
         </section>
       )}
-    </div>
+    </>
   );
 }

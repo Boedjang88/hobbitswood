@@ -261,7 +261,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
         
         <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
           <RevealText className="flex flex-col items-center">
-            <Sparkles className="w-8 h-8 text-brand-gold/60 mb-6 animate-pulse" />
+            <Sparkles className="w-8 h-8 text-brand-gold/60 mb-6 animate-pulse mx-auto" />
             <p className="text-brand-gold uppercase tracking-[0.3em] text-xs font-semibold mb-6">Awal Mula</p>
             <h2 className="text-4xl md:text-5xl lg:text-7xl font-serif text-brand-dark dark:text-brand-light leading-[1.2]">
               Lahir dari aroma <span className="italic text-brand-wood dark:text-brand-gold">serbuk gergaji</span> dan gema pukulan pahat.
@@ -421,7 +421,7 @@ export default function AboutPage({ waNumber = "6285811362629" }: { waNumber?: s
         
         <div className="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center">
           <RevealText className="flex flex-col items-center">
-            <Warehouse className="w-8 h-8 text-brand-gold/80 mb-6" />
+            <Warehouse className="w-8 h-8 text-brand-gold/80 mb-6 mx-auto" />
             <h2 className="text-5xl md:text-7xl font-serif mb-8 leading-tight">
               Mulai Cerita Anda <br/>
               <span className="text-brand-gold italic">Bersama Kami.</span>

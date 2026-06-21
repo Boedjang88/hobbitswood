@@ -18,24 +18,29 @@ interface LightboxProps {
 const slideVariants = {
   enter: (direction: number) => ({
     x: direction > 0 ? "100%" : "-100%",
+    y: 0,
     opacity: 0,
     scale: 0.95
   }),
   center: {
     x: 0,
+    y: 0,
     opacity: 1,
     scale: 1,
     transition: {
       x: { type: "spring", stiffness: 300, damping: 30 },
+      y: { type: "spring", stiffness: 300, damping: 30 },
       opacity: { duration: 0.25 }
     }
   },
   exit: (direction: number) => ({
     x: direction < 0 ? "100%" : "-100%",
+    y: 0,
     opacity: 0,
     scale: 0.95,
     transition: {
       x: { type: "spring", stiffness: 300, damping: 30 },
+      y: { type: "spring", stiffness: 300, damping: 30 },
       opacity: { duration: 0.2 }
     }
   })
@@ -51,7 +56,6 @@ export default function Lightbox({
 }: LightboxProps) {
   const [mounted, setMounted] = useState(false);
   const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   
   const lastIndex = useRef(currentIndex);
@@ -74,7 +78,6 @@ export default function Lightbox({
       }
       lastIndex.current = currentIndex;
       setScale(1);
-      setPosition({ x: 0, y: 0 });
     }
   }, [currentIndex, images.length]);
 
@@ -102,7 +105,6 @@ export default function Lightbox({
       setScale(2.2);
     } else {
       setScale(1);
-      setPosition({ x: 0, y: 0 });
     }
   };
 
@@ -111,25 +113,24 @@ export default function Lightbox({
   };
 
   const handleZoomOut = () => {
-    setScale(prev => {
-      const nextScale = Math.max(1, prev - 0.5);
-      if (nextScale === 1) setPosition({ x: 0, y: 0 });
-      return nextScale;
-    });
+    setScale(prev => Math.max(1, prev - 0.5));
   };
 
   if (!isOpen || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-sm select-none">
+    <div
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-sm select-none"
+      onClick={onClose}
+    >
       
       {/* Top Bar Indicator */}
       <div className="absolute top-4 left-4 z-[120] text-white/90 font-semibold text-xs bg-black/40 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md tracking-wider">
         {currentIndex + 1} / {images.length}
       </div>
 
-      {/* Control Buttons */}
-      <div className="absolute top-4 right-4 z-[120] flex items-center gap-2">
+      {/* Control Buttons (zoom only, no close) */}
+      <div className="absolute top-4 right-4 z-[120] flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
         {/* Zoom Out Button - desktop only */}
         <button
           onClick={handleZoomOut}
@@ -154,23 +155,15 @@ export default function Lightbox({
         >
           <Plus className="h-5 w-5" />
         </button>
-
-        <div className="hidden md:block w-[1px] h-6 bg-white/20 mx-1" />
-
-        {/* Close Button - always visible */}
-        <button
-          onClick={onClose}
-          className="rounded-full bg-black/50 border border-white/10 p-2 text-white hover:bg-white/20 transition-all active:scale-95 flex items-center justify-center"
-          title="Close"
-        >
-          <X className="h-5 w-5" />
-        </button>
       </div>
 
       {/* Left Chevron (Desktop Only) */}
       {images.length > 1 && scale === 1 && (
         <button
-          onClick={onPrev}
+          onClick={(e) => {
+            e.stopPropagation();
+            onPrev();
+          }}
           className="hidden md:flex absolute left-6 z-[110] rounded-full bg-black/50 border border-white/10 p-3.5 text-white hover:bg-white/20 transition-all active:scale-90"
         >
           <ChevronLeft className="h-6 w-6" />
@@ -206,24 +199,33 @@ export default function Lightbox({
                 }
               }
             }}
-            animate={scale > 1 ? { scale, x: position.x, y: position.y } : "center"}
+            animate={scale > 1 ? { scale } : "center"}
             transition={{ type: "spring", stiffness: 350, damping: 32 }}
-            onUpdate={(latest) => {
-              if (scale > 1) {
-                setPosition({ x: latest.x as number, y: latest.y as number });
-              }
-            }}
             onDoubleClick={handleDoubleTap}
-            className="absolute inset-0 cursor-grab active:cursor-grabbing flex items-center justify-center"
+            className="absolute flex items-center justify-center cursor-grab active:cursor-grabbing w-auto h-auto"
           >
-            <Image
-              src={images[currentIndex]}
-              alt={`Product detail image view ${currentIndex + 1}`}
-              fill
-              className="object-contain pointer-events-none select-none"
-              priority
-              unoptimized
-            />
+            <div 
+              className="relative max-w-[95vw] max-h-[60svh] md:max-h-[68vh] w-auto h-auto flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={images[currentIndex]}
+                alt={`Product detail image view ${currentIndex + 1}`}
+                className="max-w-[95vw] max-h-[60svh] md:max-h-[68vh] w-auto h-auto object-contain select-none"
+                draggable="false"
+              />
+              {/* Close button — corner of image */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClose();
+                }}
+                className="absolute top-3 right-3 z-[130] rounded-full bg-black/60 border border-white/15 p-2 text-white hover:bg-white/20 transition-all active:scale-95 flex items-center justify-center backdrop-blur-sm"
+                title="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -231,7 +233,10 @@ export default function Lightbox({
       {/* Right Chevron (Desktop Only) */}
       {images.length > 1 && scale === 1 && (
         <button
-          onClick={onNext}
+          onClick={(e) => {
+            e.stopPropagation();
+            onNext();
+          }}
           className="hidden md:flex absolute right-6 z-[110] rounded-full bg-black/50 border border-white/10 p-3.5 text-white hover:bg-white/20 transition-all active:scale-90"
         >
           <ChevronRight className="h-6 w-6" />
@@ -240,7 +245,10 @@ export default function Lightbox({
 
       {/* Mobile-only bottom zoom bar */}
       {scale >= 1 && (
-        <div className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-[120] flex items-center gap-3 bg-black/50 backdrop-blur-md rounded-2xl px-4 py-2.5 border border-white/10">
+        <div 
+          onClick={(e) => e.stopPropagation()}
+          className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-[120] flex items-center gap-3 bg-black/50 backdrop-blur-md rounded-2xl px-4 py-2.5 border border-white/10"
+        >
           <button
             onClick={handleZoomOut}
             disabled={scale === 1}
@@ -265,11 +273,15 @@ export default function Lightbox({
 
       {/* Thumbnail Bar */}
       {images.length > 1 && scale === 1 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 overflow-x-auto max-w-[90vw] px-4 py-2.5 scrollbar-hide bg-black/40 rounded-2xl border border-white/5 backdrop-blur-sm">
+        <div 
+          onClick={(e) => e.stopPropagation()}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 overflow-x-auto max-w-[90vw] px-4 py-2.5 scrollbar-hide bg-black/40 rounded-2xl border border-white/5 backdrop-blur-sm"
+        >
           {images.map((img, idx) => (
             <button
               key={idx}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 if (idx > currentIndex) {
                   for (let i = 0; i < idx - currentIndex; i++) onNext();
                 } else if (idx < currentIndex) {
