@@ -31,7 +31,7 @@ export default async function FaqPage() {
   return (
     <div className="page-enter">
       {/* ═══════ HEADER ═══════ */}
-      <section className="bg-brand-cream dark:bg-[#222] pb-16 pt-32 lg:pb-20 lg:pt-40 transition-colors duration-300">
+      <section className="bg-brand-cream dark:bg-[#222] pb-12 pt-20 lg:pb-16 lg:pt-28 transition-colors duration-300">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
           <AnimateOnScroll direction="up">
             <p className="text-xs uppercase tracking-[0.3em] text-brand-dark font-medium dark:text-brand-light">
@@ -128,17 +128,6 @@ export default async function FaqPage() {
             >
               Lihat Katalog
             </Link>
-          </div>
-
-          {/* Hours info */}
-          <div className="mt-12 inline-flex items-center gap-3 rounded-full border border-brand-wood/10 bg-brand-light dark:bg-[#111] dark:border-brand-light/10 px-6 py-3">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-green opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-green" />
-            </span>
-            <span className="text-xs text-brand-dark font-medium dark:text-brand-light">
-              Senin – Sabtu, 08:00 – 17:00 WIB
-            </span>
           </div>
         </AnimateOnScroll>
       </section>

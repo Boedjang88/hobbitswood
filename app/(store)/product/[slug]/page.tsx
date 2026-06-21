@@ -121,7 +121,7 @@ export default async function ProductDetailPage(props: ProductPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-brand-cream dark:bg-[#1A1A1A] pb-12 pt-24 lg:pb-24 lg:pt-36">
+      <div className="bg-brand-cream dark:bg-[#1A1A1A] pb-12 pt-16 lg:pb-24 lg:pt-28">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           {/* Breadcrumb */}
           <nav

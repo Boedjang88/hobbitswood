@@ -19,7 +19,7 @@ export default function ScrollDrivenHero() {
   const y = useTransform(smoothScrollY, [0, 1000], [0, 150]);
 
   return (
-    <section ref={ref} className="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden pt-20 pb-12">
+    <section ref={ref} className="relative min-h-[100svh] w-full flex items-center justify-center overflow-hidden pt-16 md:pt-20 pb-12">
       <motion.div 
         style={{ y }} 
         className="absolute inset-0 w-full h-[120%] -top-[10%] will-change-transform"
