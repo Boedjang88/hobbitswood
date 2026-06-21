@@ -35,15 +35,10 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
       const currentScrollY = window.scrollY;
       setScrolled(currentScrollY > 50);
       
-      // Hide on scroll down, show on scroll up - only for desktop (width >= 768px)
-      if (window.innerWidth >= 768) {
-        if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-          setHidden(true);
-        } else {
-          setHidden(false);
-        }
+      // Hide on scroll down, show on scroll up
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setHidden(true);
       } else {
-        // Mobile navbar is always visible
         setHidden(false);
       }
       lastScrollY.current = currentScrollY;

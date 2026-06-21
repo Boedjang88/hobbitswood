@@ -34,10 +34,9 @@ export default async function StoreLayout({
       <main>{children}</main>
       <FloatingCart />
 
-      {/* ─── Footer ─── */}
-      <footer className="border-t border-brand-wood/10 bg-brand-dark text-brand-light mt-12 md:mt-20">
+      <footer className="border-t border-brand-wood/10 bg-brand-dark text-brand-light mt-16 md:mt-26">
         {/* ─── Mobile Footer (compact) ─── */}
-        <div className="md:hidden px-6 pt-12 pb-14 flex flex-col items-center gap-6">
+        <div className="md:hidden px-6 pt-14 pb-16 flex flex-col items-center gap-6">
 
           {/* Brand */}
           <div className="flex flex-col items-center gap-2">
@@ -105,7 +104,7 @@ export default async function StoreLayout({
 
 
         {/* ─── Desktop Footer ─── */}
-        <div className="hidden md:block mx-auto max-w-7xl px-6 pt-16 pb-12 lg:px-8">
+        <div className="hidden md:block mx-auto max-w-7xl px-6 pt-20 pb-16 lg:px-8">
           <div className="flex flex-col text-center md:text-left md:flex-row md:justify-between gap-12">
             {/* Brand */}
             <div className="flex flex-col items-center md:items-start max-w-sm mx-auto md:mx-0">

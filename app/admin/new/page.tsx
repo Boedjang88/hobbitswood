@@ -8,7 +8,6 @@ import DragDropUploader from "@/components/admin/DragDropUploader";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  SlugGenerator,
   StructuredDimensionsInput,
   StructuredMaterialsInput,
   StructuredFinishingsInput,
@@ -66,10 +65,6 @@ export default function NewProduct() {
                 placeholder="e.g. Kursi Makan Jati Solid" 
                 className="w-full rounded-lg border border-[#EAEAEA] dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-2.5 text-sm outline-none transition-all text-brand-dark dark:text-zinc-100 focus:border-[#111] dark:focus:border-zinc-600 focus:ring-2 focus:ring-[#111]/10 dark:focus:ring-zinc-100/10 placeholder-[#999] dark:placeholder-zinc-600" 
               />
-            </div>
-
-            <div className="md:col-span-2">
-              <SlugGenerator productName={name} />
             </div>
 
             <div>

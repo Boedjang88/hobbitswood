@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { deleteFaqItem, deleteFaqCategory } from "@/lib/actions/faq";
-import { Trash2, Search, HelpCircle, ChevronDown, ChevronUp, Folder } from "lucide-react";
+import { Trash2, Search, HelpCircle, ChevronDown, ChevronUp, Folder, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 type FaqItem = {
@@ -28,6 +28,18 @@ export default function FaqManagerClient({ categories }: Props) {
   const [activeTab, setActiveTab] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollTable = (direction: "left" | "right") => {
+    if (tableContainerRef.current) {
+      const scrollAmount = 250;
+      tableContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   // Flatten all items for the "All" view
   const allItems = categories.flatMap((cat) =>
@@ -134,20 +146,42 @@ export default function FaqManagerClient({ categories }: Props) {
                 : categories.find((c) => c.id === activeTab)?.title || "FAQ"}
             </h2>
           </div>
-          <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-dark/40 dark:text-zinc-500" />
-            <input
-              type="text"
-              placeholder="Cari pertanyaan atau jawaban..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-[#F5F5F5] dark:bg-zinc-950 border border-transparent dark:border-zinc-800 dark:text-zinc-100 focus:bg-white dark:focus:bg-zinc-900 focus:border-[#EAEAEA] dark:focus:border-zinc-700 rounded-xl text-xs outline-none transition-all"
-            />
+          <div className="flex items-center gap-4 w-full sm:w-auto shrink-0 justify-end">
+            {/* Slide left/right buttons */}
+            <div className="hidden sm:flex items-center gap-1 border border-[#EAEAEA] dark:border-zinc-800 p-1 rounded-xl bg-white dark:bg-zinc-950">
+              <button
+                type="button"
+                onClick={() => scrollTable("left")}
+                className="p-1.5 hover:bg-[#F5F5F5] dark:hover:bg-zinc-800 rounded-lg text-brand-dark dark:text-brand-light transition-all flex items-center justify-center cursor-pointer active:scale-95"
+                title="Slide Kiri"
+              >
+                <ChevronLeft className="w-4.5 h-4.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTable("right")}
+                className="p-1.5 hover:bg-[#F5F5F5] dark:hover:bg-zinc-800 rounded-lg text-brand-dark dark:text-brand-light transition-all flex items-center justify-center cursor-pointer active:scale-95"
+                title="Slide Kanan"
+              >
+                <ChevronRight className="w-4.5 h-4.5" />
+              </button>
+            </div>
+            
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-dark/40 dark:text-zinc-500" />
+              <input
+                type="text"
+                placeholder="Cari pertanyaan atau jawaban..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-[#F5F5F5] dark:bg-zinc-950 border border-transparent dark:border-zinc-800 dark:text-zinc-100 focus:bg-white dark:focus:bg-zinc-900 focus:border-[#EAEAEA] dark:focus:border-zinc-700 rounded-xl text-xs outline-none transition-all"
+              />
+            </div>
           </div>
         </div>
 
         {/* FAQ Table (Desktop & Tablet View) */}
-        <div className="hidden sm:block overflow-x-auto">
+        <div ref={tableContainerRef} className="hidden sm:block overflow-x-auto scroll-behavior-smooth">
           <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead>
               <tr className="bg-[#FAFAFA]/30 dark:bg-zinc-950/30 text-xs text-brand-dark dark:text-brand-light border-b border-[#EAEAEA] dark:border-zinc-800 uppercase tracking-wider">

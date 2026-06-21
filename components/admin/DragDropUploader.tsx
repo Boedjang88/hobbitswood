@@ -8,6 +8,8 @@ export default function DragDropUploader({ images, setImages }: { images: string
   const [isDragging, setIsDragging] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRefForReplace = useRef<HTMLInputElement>(null);
+  const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
 
   const processFiles = async (files: File[]) => {
     setIsCompressing(true);
@@ -41,7 +43,31 @@ export default function DragDropUploader({ images, setImages }: { images: string
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
       processFiles(files);
-      // Reset input so the same file can be selected again if needed
+      e.target.value = '';
+    }
+  };
+
+  const triggerReplace = (index: number) => {
+    setReplaceIndex(index);
+    fileInputRefForReplace.current?.click();
+  };
+
+  const handleReplaceFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0 && replaceIndex !== null) {
+      const file = e.target.files[0];
+      if (file.type.startsWith("image/")) {
+        setIsCompressing(true);
+        try {
+          const compressed = await compressImage(file);
+          setImages((prev: string[]) => prev.map((img, i) => i === replaceIndex ? compressed : img));
+        } catch (error) {
+          console.error("Failed to replace image", error);
+          alert("Failed to replace image.");
+        } finally {
+          setIsCompressing(false);
+          setReplaceIndex(null);
+        }
+      }
       e.target.value = '';
     }
   };
@@ -55,6 +81,10 @@ export default function DragDropUploader({ images, setImages }: { images: string
 
   const updateUrl = (index: number, url: string) => {
     setImages((prev: string[]) => prev.map((img, i) => i === index ? url : img));
+  };
+
+  const addImageUrlInput = () => {
+    setImages((prev: string[]) => [...prev, ""]);
   };
 
   return (
@@ -75,44 +105,84 @@ export default function DragDropUploader({ images, setImages }: { images: string
           multiple 
           className="hidden" 
         />
+        <input 
+          type="file" 
+          ref={fileInputRefForReplace} 
+          onChange={handleReplaceFileSelect} 
+          accept="image/*" 
+          className="hidden" 
+        />
+        
         {isCompressing ? (
           <div className="flex flex-col items-center justify-center">
             <Loader2 className="w-10 h-10 text-brand-dark dark:text-brand-light mb-3 animate-spin" />
-            <p className="text-sm font-medium text-brand-dark dark:text-zinc-100">Compressing images...</p>
+            <p className="text-sm font-medium text-brand-dark dark:text-zinc-100">Proses gambar...</p>
           </div>
         ) : (
           <>
             <ImagePlus className="w-10 h-10 text-brand-dark dark:text-brand-light mb-3" />
-            <p className="text-sm font-medium text-brand-dark dark:text-zinc-100">Click to open File Explorer or Drag & Drop</p>
-            <p className="text-xs text-brand-dark dark:text-brand-light mt-1">Images will be automatically compressed before saving</p>
+            <p className="text-sm font-medium text-brand-dark dark:text-zinc-100">Klik untuk pilih Berkas Gambar atau Drag & Drop</p>
+            <p className="text-xs text-brand-dark dark:text-brand-light mt-1">Gambar akan dioptimasi otomatis</p>
           </>
         )}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Daftar Gambar Produk</span>
+        <button
+          type="button"
+          onClick={addImageUrlInput}
+          className="text-xs font-semibold text-brand-gold hover:text-brand-gold/80 flex items-center gap-1"
+        >
+          <ImagePlus className="w-3.5 h-3.5" />
+          <span>Tambah Kolom URL</span>
+        </button>
       </div>
 
       {/* URL Inputs & Previews */}
       <div className="space-y-3">
         {images.map((img, index) => (
-          <div key={index} className="flex items-center gap-3">
-            <input 
-              type="text" 
-              name="images" 
-              required 
-              value={img} 
-              onChange={(e) => updateUrl(index, e.target.value)} 
-              placeholder="https://... or Upload Image" 
-              className="flex-1 rounded-lg border border-[#EAEAEA] dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-2 text-sm outline-none transition-all text-brand-dark dark:text-zinc-100" 
-              readOnly={img.startsWith('data:image')}
-            />
-            {images.length > 1 && (
-              <button type="button" onClick={() => removeImage(index)} className="p-2 text-brand-dark dark:text-brand-light hover:text-red-600 dark:hover:text-red-400">
-                <Trash2 className="h-4 w-4" />
-              </button>
-            )}
+          <div key={index} className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-2.5 rounded-lg border border-[#EAEAEA] dark:border-zinc-800 shadow-xs">
             {img && (
-              <div className="relative h-10 w-10 shrink-0 rounded border border-[#EAEAEA] dark:border-zinc-700 overflow-hidden bg-white dark:bg-zinc-800">
+              <div className="relative h-12 w-12 shrink-0 rounded-md border border-[#EAEAEA] dark:border-zinc-700 overflow-hidden bg-zinc-100">
                 <Image src={img} alt="Preview" fill className="object-cover" unoptimized />
               </div>
             )}
+            
+            {img.startsWith('data:image') ? (
+              <div className="flex-1 flex items-center justify-between px-3 py-2 rounded-lg bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-200/40 dark:border-emerald-500/10">
+                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">📁 File Gambar Terunggah</span>
+                <input type="hidden" name="images" value={img} />
+              </div>
+            ) : (
+              <input 
+                type="text" 
+                name="images" 
+                required 
+                value={img} 
+                onChange={(e) => updateUrl(index, e.target.value)} 
+                placeholder="https://... atau Unggah Gambar" 
+                className="flex-1 rounded-lg border border-[#EAEAEA] dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-2 text-xs outline-none transition-all text-brand-dark dark:text-zinc-100 focus:border-brand-gold/50" 
+              />
+            )}
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button 
+                type="button" 
+                onClick={() => triggerReplace(index)} 
+                className="px-2.5 py-1.5 rounded-lg border border-[#EAEAEA] dark:border-zinc-800 text-[10px] font-bold uppercase hover:bg-black/5 dark:hover:bg-white/5 transition-all text-brand-dark dark:text-zinc-200"
+              >
+                Ganti
+              </button>
+              <button 
+                type="button" 
+                onClick={() => removeImage(index)} 
+                className="p-1.5 rounded-lg border border-red-200/20 hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500 transition-colors"
+                title="Hapus Gambar"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         ))}
       </div>

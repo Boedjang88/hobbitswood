@@ -70,7 +70,7 @@ export default async function ShopPage(props: {
   return (
     <div className="page-enter bg-brand-light dark:bg-[#1A1A1A] min-h-screen transition-colors duration-300">
       {/* Categories & Products */}
-      <section className="pt-16 md:pt-24 pb-16 lg:pb-24">
+      <section className="pt-28 md:pt-36 pb-16 lg:pb-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           
           {/* Compact Header & Search */}
