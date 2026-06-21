@@ -152,7 +152,7 @@ export default function AnalyticsChart({ data }: AnalyticsChartProps) {
             onClick={(_, index) =>
               setActiveIndex(activeIndex === index ? null : index)
             }
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", outline: "none" }}
           >
             {normalized.map((entry, index) => {
               const isActive = activeIndex === index;
@@ -170,6 +170,7 @@ export default function AnalyticsChart({ data }: AnalyticsChartProps) {
                       isAnyActive && !isActive
                         ? "blur(0.5px)"
                         : "none",
+                    outline: "none",
                   }}
                 />
               );

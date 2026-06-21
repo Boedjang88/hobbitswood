@@ -132,3 +132,11 @@ body::before {
   opacity: 0.02;
   mix-blend-mode: overlay;
 }
+
+/* ─── Recharts Focus Outline Fix ─── */
+.recharts-wrapper *,
+.recharts-wrapper *:focus,
+.recharts-wrapper *:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
