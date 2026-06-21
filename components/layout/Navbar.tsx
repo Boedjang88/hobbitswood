@@ -83,7 +83,7 @@ export default function Navbar({ customOrderLink = "https://wa.me/6285811362629"
             : "bg-brand-wood/90 dark:bg-brand-dark/90 shadow-sm border-b border-brand-wood/50 dark:border-brand-dark/50"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 md:py-4.5 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:py-5 lg:px-8">
           {/* Logo */}
           <Link href="/" className="group block flex-shrink-0" onClick={() => setMobileOpen(false)}>
             <div className="relative w-10 h-10 md:w-14 md:h-14 transition-transform duration-300 group-hover:scale-105">
