@@ -41,19 +41,25 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
   const primaryImage = images.length > 0 ? images[0] : "/images/hero.jpg";
   const [activeImage, setActiveImage] = useState(images[0] || primaryImage);
   const mobileCarouselRef = useRef<HTMLDivElement>(null);
+  const scrollingToRef = useRef<number | null>(null);
 
   const displayImages = images.length > 0 ? images : [primaryImage];
 
   // Sync mobile carousel scroll with activeImage
   useEffect(() => {
-    if (mobileCarouselRef.current && typeof window !== 'undefined' && window.innerWidth < 1024) {
+    if (mobileCarouselRef.current) {
       const idx = displayImages.indexOf(activeImage);
       if (idx !== -1) {
         const width = mobileCarouselRef.current.clientWidth;
-        mobileCarouselRef.current.scrollTo({
-          left: idx * width,
-          behavior: 'smooth'
-        });
+        if (width > 0) {
+          const currentScroll = mobileCarouselRef.current.scrollLeft;
+          if (Math.abs(currentScroll - idx * width) > 10) {
+            mobileCarouselRef.current.scrollTo({
+              left: idx * width,
+              behavior: 'smooth'
+            });
+          }
+        }
       }
     }
   }, [activeImage, displayImages]);
@@ -129,11 +135,23 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
             {/* Mobile: Swipeable Snap Carousel */}
             <div 
               ref={mobileCarouselRef}
-              className="flex lg:hidden absolute inset-0 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+              className="flex lg:hidden absolute inset-0 overflow-x-auto snap-x snap-mandatory scrollbar-hide overscroll-x-contain scroll-smooth"
+              onTouchStart={() => {
+                scrollingToRef.current = null;
+              }}
               onScroll={(e) => {
                 const scrollLeft = e.currentTarget.scrollLeft;
                 const width = e.currentTarget.clientWidth;
-                const index = Math.round(scrollLeft / width);
+                if (!width) return;
+                const index = Math.max(0, Math.min(displayImages.length - 1, Math.round(scrollLeft / width)));
+                
+                if (scrollingToRef.current !== null) {
+                  if (index === scrollingToRef.current) {
+                    scrollingToRef.current = null;
+                  }
+                  return;
+                }
+
                 if (displayImages[index] && displayImages[index] !== activeImage) {
                   setActiveImage(displayImages[index]);
                 }
@@ -157,6 +175,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
                   onClick={() => {
                     const idx = images.indexOf(activeImage);
                     const prevIdx = (idx - 1 + images.length) % images.length;
+                    scrollingToRef.current = prevIdx;
                     setActiveImage(images[prevIdx >= 0 ? prevIdx : 0]);
                   }}
                   className="hidden lg:flex absolute left-4 top-1/2 z-10 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/80 text-brand-dark backdrop-blur-md opacity-0 transition-all duration-300 group-hover:opacity-100 hover:bg-white hover:scale-110 shadow-sm"
@@ -168,6 +187,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
                   onClick={() => {
                     const idx = images.indexOf(activeImage);
                     const nextIdx = (idx + 1) % images.length;
+                    scrollingToRef.current = nextIdx;
                     setActiveImage(images[nextIdx >= 0 ? nextIdx : 0]);
                   }}
                   className="hidden lg:flex absolute right-4 top-1/2 z-10 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/80 text-brand-dark backdrop-blur-md opacity-0 transition-all duration-300 group-hover:opacity-100 hover:bg-white hover:scale-110 shadow-sm"
@@ -201,7 +221,13 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
               {images.map((img: string, idx: number) => (
                 <button
                   key={idx}
-                  onClick={() => setActiveImage(img)}
+                  onClick={() => {
+                    const targetIdx = images.indexOf(img);
+                    if (targetIdx !== -1) {
+                      scrollingToRef.current = targetIdx;
+                    }
+                    setActiveImage(img);
+                  }}
                   className={`relative h-16 w-16 lg:h-24 lg:w-24 flex-shrink-0 snap-start overflow-hidden rounded-lg lg:rounded-xl transition-all duration-300 ${
                     activeImage === img
                       ? "ring-2 ring-brand-wood dark:ring-brand-gold scale-95 opacity-100 shadow-lg"
