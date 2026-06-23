@@ -7,20 +7,36 @@ import { useCartStore } from "@/lib/store/cartStore";
 import Lightbox from "@/components/ui/Lightbox";
 
 export default function ProductClientView({ product, waNumber = "6285811362629" }: { product: any, waNumber?: string }) {
+  interface VariantOption {
+    label: string;
+    price: number;
+    original: string;
+  }
+
+  const parseOption = (val: string): VariantOption => {
+    const match = val.match(/\[\+?(-?\d+)\]/);
+    if (match) {
+      const price = parseInt(match[1], 10);
+      const label = val.replace(/\[\+?(-?\d+)\]/, "").trim();
+      return { label, price, original: val };
+    }
+    return { label: val, price: 0, original: val };
+  };
+
   // Parse dimensions and materials safely
-  const dimensions = (() => {
+  const dimensions: VariantOption[] = (() => {
     try {
       const parsed = JSON.parse(product.dimensions);
-      return Array.isArray(parsed) ? parsed : [];
+      return Array.isArray(parsed) ? parsed.filter(Boolean).map(parseOption) : [];
     } catch {
       return [];
     }
   })();
 
-  const materials = (() => {
+  const materials: VariantOption[] = (() => {
     try {
       const parsed = JSON.parse(product.materials);
-      return Array.isArray(parsed) ? parsed : [];
+      return Array.isArray(parsed) ? parsed.filter(Boolean).map(parseOption) : [];
     } catch {
       return [];
     }
@@ -64,8 +80,8 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
     }
   }, [activeImage, displayImages]);
 
-  const [selectedDimension, setSelectedDimension] = useState(dimensions[0] || "");
-  const [selectedMaterial, setSelectedMaterial] = useState(materials[0] || "");
+  const [selectedDimension, setSelectedDimension] = useState(dimensions[0]?.label || "");
+  const [selectedMaterial, setSelectedMaterial] = useState(materials[0]?.label || "");
   const [quantity, setQuantity] = useState(1);
   const [expandedSection, setExpandedSection] = useState<string | null>("desc");
 
@@ -93,29 +109,40 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
     }).format(price);
   };
 
+  const activeDimensionObj = dimensions.find(d => d.label === selectedDimension);
+  const activeMaterialObj = materials.find(m => m.label === selectedMaterial);
+
   const calculateFinalPrice = () => {
     let finalPrice = product.price;
 
-    // 1. Dimension adjustment (15% increase per step)
-    if (dimensions.length > 0 && selectedDimension) {
-      const dimIdx = dimensions.indexOf(selectedDimension);
-      if (dimIdx !== -1) {
-        finalPrice += Math.round(product.price * (dimIdx * 0.15));
+    // 1. Dimension adjustment: use explicit price adjustment if non-zero, otherwise fallback to percentage step-up
+    if (activeDimensionObj) {
+      if (activeDimensionObj.price !== 0) {
+        finalPrice += activeDimensionObj.price;
+      } else {
+        const dimIdx = dimensions.findIndex(d => d.label === selectedDimension);
+        if (dimIdx > 0) {
+          finalPrice += Math.round(product.price * (dimIdx * 0.15));
+        }
       }
     }
 
-    // 2. Material adjustment (based on wood/material premium)
-    if (materials.length > 0 && selectedMaterial) {
-      const mat = selectedMaterial.toLowerCase();
-      let materialAdjustment = 0;
-      if (mat.includes("jati solid") || mat.includes("grade a")) {
-        materialAdjustment = 0.25; // +25%
-      } else if (mat.includes("sungkai") || mat.includes("grade b")) {
-        materialAdjustment = 0.15; // +15%
-      } else if (mat.includes("kaca tempered") || mat.includes("besi")) {
-        materialAdjustment = 0.10; // +10%
+    // 2. Material adjustment: use explicit price adjustment if non-zero, otherwise fallback to material premium
+    if (activeMaterialObj) {
+      if (activeMaterialObj.price !== 0) {
+        finalPrice += activeMaterialObj.price;
+      } else {
+        const mat = activeMaterialObj.label.toLowerCase();
+        let materialAdjustment = 0;
+        if (mat.includes("jati solid") || mat.includes("grade a")) {
+          materialAdjustment = 0.25; // +25%
+        } else if (mat.includes("sungkai") || mat.includes("grade b")) {
+          materialAdjustment = 0.15; // +15%
+        } else if (mat.includes("kaca tempered") || mat.includes("besi")) {
+          materialAdjustment = 0.10; // +10%
+        }
+        finalPrice += Math.round(product.price * materialAdjustment);
       }
-      finalPrice += Math.round(product.price * materialAdjustment);
     }
 
     return finalPrice;
@@ -290,19 +317,23 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
           <div className="mb-6 lg:mb-8 border-t border-brand-wood/10 dark:border-white/10 pt-4 lg:pt-6">
             <h3 className="text-xs lg:text-sm uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-3 lg:mb-4 font-medium">Dimensi</h3>
             <div className="flex flex-wrap gap-2 lg:gap-3">
-              {dimensions.map((dim: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedDimension(dim)}
-                  className={`px-4 py-2 lg:px-6 lg:py-3 rounded-full text-xs lg:text-sm transition-all duration-300 border hover:-translate-y-0.5 active:scale-95 shadow-sm hover:shadow-md ${
-                    selectedDimension === dim
-                      ? "border-brand-dark bg-brand-dark text-white dark:bg-brand-light dark:text-brand-dark dark:border-brand-light"
-                      : "border-brand-wood/20 hover:border-brand-dark dark:border-white/10 dark:hover:border-white/30 text-brand-dark dark:text-brand-light hover:bg-brand-wood/5 dark:hover:bg-white/5"
-                  }`}
-                >
-                  {dim}
-                </button>
-              ))}
+              {dimensions.map((dim, idx) => {
+                const isSelected = selectedDimension === dim.label;
+                const priceLabel = dim.price > 0 ? ` (+${formatPrice(dim.price)})` : "";
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedDimension(dim.label)}
+                    className={`px-4 py-2 lg:px-6 lg:py-3 rounded-full text-xs lg:text-sm transition-all duration-300 border hover:-translate-y-0.5 active:scale-95 shadow-sm hover:shadow-md ${
+                      isSelected
+                        ? "border-brand-dark bg-brand-dark text-white dark:bg-brand-light dark:text-brand-dark dark:border-brand-light"
+                        : "border-brand-wood/20 hover:border-brand-dark dark:border-white/10 dark:hover:border-white/30 text-brand-dark dark:text-brand-light hover:bg-brand-wood/5 dark:hover:bg-white/5"
+                    }`}
+                  >
+                    {dim.label}{priceLabel}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
@@ -312,20 +343,24 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
           <div className="mb-6 lg:mb-8 border-t border-brand-wood/10 dark:border-white/10 pt-4 lg:pt-6">
             <h3 className="text-xs lg:text-sm uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-3 lg:mb-4 font-medium">Material</h3>
             <div className="flex flex-wrap gap-2 lg:gap-3">
-              {materials.map((mat: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedMaterial(mat)}
-                  className={`px-4 py-2 lg:px-6 lg:py-3 rounded-full text-xs lg:text-sm transition-all duration-300 border flex items-center gap-2 hover:-translate-y-0.5 active:scale-95 shadow-sm hover:shadow-md ${
-                    selectedMaterial === mat
-                      ? "border-brand-dark bg-brand-dark text-white dark:bg-brand-light dark:text-brand-dark dark:border-brand-light"
-                      : "border-brand-wood/20 hover:border-brand-dark dark:border-white/10 dark:hover:border-white/30 text-brand-dark dark:text-brand-light hover:bg-brand-wood/5 dark:hover:bg-white/5"
-                  }`}
-                >
-                  <div className="w-3 h-3 rounded-full bg-brand-wood dark:bg-brand-gold" />
-                  {mat}
-                </button>
-              ))}
+              {materials.map((mat, idx) => {
+                const isSelected = selectedMaterial === mat.label;
+                const priceLabel = mat.price > 0 ? ` (+${formatPrice(mat.price)})` : "";
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedMaterial(mat.label)}
+                    className={`px-4 py-2 lg:px-6 lg:py-3 rounded-full text-xs lg:text-sm transition-all duration-300 border flex items-center gap-2 hover:-translate-y-0.5 active:scale-95 shadow-sm hover:shadow-md ${
+                      isSelected
+                        ? "border-brand-dark bg-brand-dark text-white dark:bg-brand-light dark:text-brand-dark dark:border-brand-light"
+                        : "border-brand-wood/20 hover:border-brand-dark dark:border-white/10 dark:hover:border-white/30 text-brand-dark dark:text-brand-light hover:bg-brand-wood/5 dark:hover:bg-white/5"
+                    }`}
+                  >
+                    <div className="w-3 h-3 rounded-full bg-brand-wood dark:bg-brand-gold" />
+                    {mat.label}{priceLabel}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}

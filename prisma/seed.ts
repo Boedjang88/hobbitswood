@@ -25,8 +25,8 @@ async function main() {
         "https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Figura foto berbahan dasar kayu jati solid dengan finishing natural yang menonjolkan urat kayu. Cocok untuk memajang memori berharga, sertifikat, maupun karya seni Anda dengan nuansa klasik dan elegan.",
-      dimensions: JSON.stringify(["Ukuran 4R", "Ukuran 5R", "Ukuran 8R", "Ukuran 10R"]),
-      materials: JSON.stringify(["Kayu Jati Solid", "Kaca Akrilik 2mm", "Backing MDF"]),
+      dimensions: JSON.stringify(["Ukuran 4R", "Ukuran 5R [+15000]", "Ukuran 8R [+35000]", "Ukuran 10R [+50000]"]),
+      materials: JSON.stringify(["Kayu Jati Solid", "Kaca Akrilik 2mm [+25000]", "Backing MDF"]),
       status: "PUBLISHED",
       links: {
         create: [
@@ -46,7 +46,7 @@ async function main() {
         "https://images.unsplash.com/photo-1544273677-c433136021d4?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Membawa kesan hangat dengan desain rustic yang dibiarkan alami tanpa cat berlebih. Sangat cocok untuk dekorasi dinding ruang tamu atau kamar tidur bernuansa vintage.",
-      dimensions: JSON.stringify(["Ukuran A4", "Ukuran A3"]),
+      dimensions: JSON.stringify(["Ukuran A4", "Ukuran A3 [+45000]"]),
       materials: JSON.stringify(["Kayu Pinus Bekas (Recycled)", "Kaca Standar"]),
       status: "PUBLISHED",
       links: {
@@ -70,8 +70,8 @@ async function main() {
         "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80"
       ]),
       description: "Etalase kaca elegan dengan rangka kayu sungkai solid. Sangat cocok digunakan sebagai lemari pajangan koleksi kesayangan di ruang tamu, atau sebagai display produk premium di toko Anda. Dilengkapi dengan lampu sorot LED hangat.",
-      dimensions: JSON.stringify(["P 80cm x L 40cm x T 180cm", "P 120cm x L 40cm x T 180cm"]),
-      materials: JSON.stringify(["Kayu Sungkai", "Kaca Tempered 5mm", "Lampu LED Warm White"]),
+      dimensions: JSON.stringify(["P 80cm x L 40cm x T 180cm", "P 120cm x L 40cm x T 180cm [+1200000]"]),
+      materials: JSON.stringify(["Kayu Sungkai", "Kaca Tempered 5mm [+350000]", "Lampu LED Warm White"]),
       status: "PUBLISHED",
       links: {
         create: [
