@@ -10,17 +10,25 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
   interface VariantOption {
     label: string;
     price: number;
+    percent: number;
     original: string;
   }
 
   const parseOption = (val: string): VariantOption => {
-    const match = val.match(/\[\+?(-?\d+)\]/);
+    // Matches tag like [+15%] or [+250000]
+    const match = val.match(/\[\+?(-?\d+)(%?)\]/);
     if (match) {
-      const price = parseInt(match[1], 10);
-      const label = val.replace(/\[\+?(-?\d+)\]/, "").trim();
-      return { label, price, original: val };
+      const value = parseInt(match[1], 10);
+      const isPercent = match[2] === "%";
+      const label = val.replace(/\[\+?(-?\d+)(%?)\]/, "").trim();
+      
+      if (isPercent) {
+        return { label, price: 0, percent: value / 100, original: val };
+      } else {
+        return { label, price: value, percent: 0, original: val };
+      }
     }
-    return { label: val, price: 0, original: val };
+    return { label: val, price: 0, percent: 0, original: val };
   };
 
   // Parse dimensions and materials safely
@@ -109,15 +117,28 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
     }).format(price);
   };
 
+  const getOptionPriceLabel = (opt: VariantOption) => {
+    if (opt.percent !== 0) {
+      const calculatedAmount = Math.round(product.price * opt.percent);
+      return ` (+${formatPrice(calculatedAmount)})`;
+    }
+    if (opt.price > 0) {
+      return ` (+${formatPrice(opt.price)})`;
+    }
+    return "";
+  };
+
   const activeDimensionObj = dimensions.find(d => d.label === selectedDimension);
   const activeMaterialObj = materials.find(m => m.label === selectedMaterial);
 
   const calculateFinalPrice = () => {
     let finalPrice = product.price;
 
-    // 1. Dimension adjustment: use explicit price adjustment if non-zero, otherwise fallback to percentage step-up
+    // 1. Dimension adjustment: percentage adjustment -> flat adjustment -> fallback percentage step-up
     if (activeDimensionObj) {
-      if (activeDimensionObj.price !== 0) {
+      if (activeDimensionObj.percent !== 0) {
+        finalPrice += Math.round(product.price * activeDimensionObj.percent);
+      } else if (activeDimensionObj.price !== 0) {
         finalPrice += activeDimensionObj.price;
       } else {
         const dimIdx = dimensions.findIndex(d => d.label === selectedDimension);
@@ -127,9 +148,11 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
       }
     }
 
-    // 2. Material adjustment: use explicit price adjustment if non-zero, otherwise fallback to material premium
+    // 2. Material adjustment: percentage adjustment -> flat adjustment -> fallback material premium
     if (activeMaterialObj) {
-      if (activeMaterialObj.price !== 0) {
+      if (activeMaterialObj.percent !== 0) {
+        finalPrice += Math.round(product.price * activeMaterialObj.percent);
+      } else if (activeMaterialObj.price !== 0) {
         finalPrice += activeMaterialObj.price;
       } else {
         const mat = activeMaterialObj.label.toLowerCase();
@@ -319,7 +342,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
             <div className="flex flex-wrap gap-2 lg:gap-3">
               {dimensions.map((dim, idx) => {
                 const isSelected = selectedDimension === dim.label;
-                const priceLabel = dim.price > 0 ? ` (+${formatPrice(dim.price)})` : "";
+                const priceLabel = getOptionPriceLabel(dim);
                 return (
                   <button
                     key={idx}
@@ -345,7 +368,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
             <div className="flex flex-wrap gap-2 lg:gap-3">
               {materials.map((mat, idx) => {
                 const isSelected = selectedMaterial === mat.label;
-                const priceLabel = mat.price > 0 ? ` (+${formatPrice(mat.price)})` : "";
+                const priceLabel = getOptionPriceLabel(mat);
                 return (
                   <button
                     key={idx}
