@@ -93,11 +93,41 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
     }).format(price);
   };
 
+  const calculateFinalPrice = () => {
+    let finalPrice = product.price;
+
+    // 1. Dimension adjustment (15% increase per step)
+    if (dimensions.length > 0 && selectedDimension) {
+      const dimIdx = dimensions.indexOf(selectedDimension);
+      if (dimIdx !== -1) {
+        finalPrice += Math.round(product.price * (dimIdx * 0.15));
+      }
+    }
+
+    // 2. Material adjustment (based on wood/material premium)
+    if (materials.length > 0 && selectedMaterial) {
+      const mat = selectedMaterial.toLowerCase();
+      let materialAdjustment = 0;
+      if (mat.includes("jati solid") || mat.includes("grade a")) {
+        materialAdjustment = 0.25; // +25%
+      } else if (mat.includes("sungkai") || mat.includes("grade b")) {
+        materialAdjustment = 0.15; // +15%
+      } else if (mat.includes("kaca tempered") || mat.includes("besi")) {
+        materialAdjustment = 0.10; // +10%
+      }
+      finalPrice += Math.round(product.price * materialAdjustment);
+    }
+
+    return finalPrice;
+  };
+
+  const finalUnitPrice = calculateFinalPrice();
+
   const handleQuickAdd = () => {
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
+      price: finalUnitPrice,
       image: primaryImage,
       quantity,
       selectedVariant: selectedDimension || undefined,
@@ -105,8 +135,10 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
     });
   };
 
-  // Safe WhatsApp Link
-  const waText = encodeURIComponent(`Halo, saya tertarik dengan ${product.name} (${formatPrice(product.price)}). Apakah masih tersedia?`);
+  // Safe WhatsApp Link with selected options and adjusted price details
+  const waText = encodeURIComponent(
+    `Halo, saya tertarik dengan ${product.name}.\n\nDetail Pilihan:\n- Ukuran/Dimensi: ${selectedDimension || "Standar"}\n- Material: ${selectedMaterial || "Standar"}\n- Jumlah: ${quantity} pcs\n- Total Harga: ${formatPrice(finalUnitPrice * quantity)}\n\nApakah produk ini masih tersedia?`
+  );
   const whatsappHref = `https://wa.me/${waNumber}?text=${waText}`;
 
   // Safe Marketplace links
@@ -249,7 +281,7 @@ export default function ProductClientView({ product, waNumber = "6285811362629" 
             {product.name}
           </h1>
           <p className="text-lg lg:text-2xl font-serif text-brand-wood dark:text-brand-gold">
-            {formatPrice(product.price * quantity)}
+            {formatPrice(finalUnitPrice * quantity)}
           </p>
         </div>
 

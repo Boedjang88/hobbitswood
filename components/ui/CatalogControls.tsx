@@ -58,20 +58,20 @@ export default function CatalogControls({ currentSort, category, material, q, ca
   return (
     <div className="flex justify-center w-full py-1">
       {/* Responsive Accordion Wrapper (Vertical cards on mobile, Horizontal cards on desktop) */}
-      <div className="w-full max-w-[250px] sm:max-w-none sm:w-auto flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center sm:items-start">
+      <div className="w-full max-w-[280px] sm:max-w-none sm:w-auto flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center sm:items-start">
         
         {/* Category Accordion Box */}
-        <div className="w-full sm:w-[200px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
+        <div className="w-full sm:w-[230px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
           <button
             type="button"
             onClick={() => toggleSection("category")}
-            className="relative flex items-center justify-between w-full py-3 px-4 bg-transparent text-center font-serif text-base font-medium text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
+            className="relative flex items-center justify-between w-full py-3.5 px-4 bg-transparent text-center font-serif text-base font-semibold text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
           >
-            <Tag className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-            <span className="flex-1 text-center select-none pl-2 pr-2 text-xs sm:text-sm">
+            <Tag className="h-4 w-4 text-brand-gold shrink-0" />
+            <span className="flex-1 text-center select-none pl-2 pr-2 text-sm sm:text-base">
               Kategori: {currentCategoryLabel}
             </span>
-            <ChevronDown className={`h-3.5 w-3.5 text-brand-gold shrink-0 transition-transform duration-300 ${
+            <ChevronDown className={`h-4 w-4 text-brand-gold shrink-0 transition-transform duration-300 ${
               openSection === "category" ? "rotate-180" : "rotate-0"
             }`} />
           </button>
@@ -89,7 +89,7 @@ export default function CatalogControls({ currentSort, category, material, q, ca
                     router.push(buildUrl("", undefined, undefined));
                     setOpenSection(null);
                   }}
-                  className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                  className={`w-full py-2.5 text-center font-serif text-sm sm:text-base transition-colors cursor-pointer ${
                     !category 
                       ? "text-brand-gold font-bold" 
                       : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
@@ -107,7 +107,7 @@ export default function CatalogControls({ currentSort, category, material, q, ca
                         router.push(buildUrl(cat.category, undefined, undefined));
                         setOpenSection(null);
                       }}
-                      className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                      className={`w-full py-2.5 text-center font-serif text-sm sm:text-base transition-colors cursor-pointer ${
                         isActive 
                           ? "text-brand-gold font-bold" 
                           : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
@@ -123,17 +123,17 @@ export default function CatalogControls({ currentSort, category, material, q, ca
         </div>
 
         {/* Material Accordion Box */}
-        <div className="w-full sm:w-[200px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
+        <div className="w-full sm:w-[230px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
           <button
             type="button"
             onClick={() => toggleSection("material")}
-            className="relative flex items-center justify-between w-full py-3 px-4 bg-transparent text-center font-serif text-base font-medium text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
+            className="relative flex items-center justify-between w-full py-3.5 px-4 bg-transparent text-center font-serif text-base font-semibold text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
           >
-            <Compass className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-            <span className="flex-1 text-center select-none pl-2 pr-2 text-xs sm:text-sm">
+            <Compass className="h-4 w-4 text-brand-gold shrink-0" />
+            <span className="flex-1 text-center select-none pl-2 pr-2 text-sm sm:text-base">
               Material: {currentMaterialLabel}
             </span>
-            <ChevronDown className={`h-3.5 w-3.5 text-brand-gold shrink-0 transition-transform duration-300 ${
+            <ChevronDown className={`h-4 w-4 text-brand-gold shrink-0 transition-transform duration-300 ${
               openSection === "material" ? "rotate-180" : "rotate-0"
             }`} />
           </button>
@@ -151,7 +151,7 @@ export default function CatalogControls({ currentSort, category, material, q, ca
                     router.push(buildUrl(undefined, undefined, ""));
                     setOpenSection(null);
                   }}
-                  className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                  className={`w-full py-2.5 text-center font-serif text-sm sm:text-base transition-colors cursor-pointer ${
                     !material 
                       ? "text-brand-gold font-bold" 
                       : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
@@ -169,7 +169,7 @@ export default function CatalogControls({ currentSort, category, material, q, ca
                         router.push(buildUrl(undefined, undefined, m.value));
                         setOpenSection(null);
                       }}
-                      className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                      className={`w-full py-2.5 text-center font-serif text-sm sm:text-base transition-colors cursor-pointer ${
                         isActive 
                           ? "text-brand-gold font-bold" 
                           : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
@@ -185,17 +185,17 @@ export default function CatalogControls({ currentSort, category, material, q, ca
         </div>
 
         {/* Sort Accordion Box */}
-        <div className="w-full sm:w-[200px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
+        <div className="w-full sm:w-[230px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
           <button
             type="button"
             onClick={() => toggleSection("sort")}
-            className="relative flex items-center justify-between w-full py-3 px-4 bg-transparent text-center font-serif text-base font-medium text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
+            className="relative flex items-center justify-between w-full py-3.5 px-4 bg-transparent text-center font-serif text-base font-semibold text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
           >
-            <ArrowUpDown className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-            <span className="flex-1 text-center select-none pl-2 pr-2 text-xs sm:text-sm">
+            <ArrowUpDown className="h-4 w-4 text-brand-gold shrink-0" />
+            <span className="flex-1 text-center select-none pl-2 pr-2 text-sm sm:text-base">
               Urutkan: {currentSortLabel}
             </span>
-            <ChevronDown className={`h-3.5 w-3.5 text-brand-gold shrink-0 transition-transform duration-300 ${
+            <ChevronDown className={`h-4 w-4 text-brand-gold shrink-0 transition-transform duration-300 ${
               openSection === "sort" ? "rotate-180" : "rotate-0"
             }`} />
           </button>
@@ -217,7 +217,7 @@ export default function CatalogControls({ currentSort, category, material, q, ca
                         router.push(buildUrl(undefined, s.value, undefined));
                         setOpenSection(null);
                       }}
-                      className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                      className={`w-full py-2.5 text-center font-serif text-sm sm:text-base transition-colors cursor-pointer ${
                         isActive 
                           ? "text-brand-gold font-bold" 
                           : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
