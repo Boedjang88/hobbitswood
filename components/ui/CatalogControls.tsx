@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Tag, Compass, ArrowUpDown } from "lucide-react";
 
@@ -13,6 +14,11 @@ interface Props {
 
 export default function CatalogControls({ currentSort, category, material, q, categories }: Props) {
   const router = useRouter();
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  const toggleSection = (section: string) => {
+    setOpenSection((prev) => (prev === section ? null : section));
+  };
 
   const buildUrl = (newCategory?: string, newSort?: string, newMaterial?: string) => {
     const params = new URLSearchParams();
@@ -45,89 +51,184 @@ export default function CatalogControls({ currentSort, category, material, q, ca
     { value: "price_desc", label: "Harga Tertinggi" },
   ];
 
+  const currentCategoryLabel = categories.find((c) => c.category === category)?.category || "Semua";
+  const currentMaterialLabel = materials.find((m) => m.value.toLowerCase() === (material || "").toLowerCase())?.label || "Semua";
+  const currentSortLabel = sortOptions.find((s) => s.value === currentSort)?.label || "Terbaru";
+
   return (
     <div className="flex justify-center w-full py-1">
-      {/* Responsive Wrapper Card (Vertical on mobile, Horizontal on desktop) */}
-      <div className="w-full max-w-[280px] sm:max-w-none sm:w-auto bg-brand-cream/20 dark:bg-zinc-900/20 border-0 rounded-2xl sm:rounded-full p-4 sm:py-3 sm:px-6 flex flex-col sm:flex-row gap-3 sm:gap-4 shadow-xs">
+      {/* Responsive Accordion Wrapper (Vertical cards on mobile, Horizontal cards on desktop) */}
+      <div className="w-full max-w-[250px] sm:max-w-none sm:w-auto flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center sm:items-start">
         
-        {/* Category Dropdown */}
-        <div className="relative group w-full sm:w-[200px]">
-          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
+        {/* Category Accordion Box */}
+        <div className="w-full sm:w-[200px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
+          <button
+            type="button"
+            onClick={() => toggleSection("category")}
+            className="relative flex items-center justify-between w-full py-3 px-4 bg-transparent text-center font-serif text-base font-medium text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
+          >
             <Tag className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-          </div>
-          <select
-            value={category || ""}
-            onChange={(e) => router.push(buildUrl(e.target.value, undefined, undefined))}
-            className="w-full appearance-none bg-white dark:bg-zinc-950/60 border-0 rounded-full py-2.5 pl-10 pr-10 text-center font-serif text-base sm:text-lg font-medium text-brand-dark dark:text-white focus:outline-none cursor-pointer transition-colors hover:bg-white/95 dark:hover:bg-zinc-900/80"
+            <span className="flex-1 text-center select-none pl-2 pr-2 text-xs sm:text-sm">
+              Kategori: {currentCategoryLabel}
+            </span>
+            <ChevronDown className={`h-3.5 w-3.5 text-brand-gold shrink-0 transition-transform duration-300 ${
+              openSection === "category" ? "rotate-180" : "rotate-0"
+            }`} />
+          </button>
+          
+          <div
+            className={`grid transition-all duration-300 ease-in-out ${
+              openSection === "category" ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            }`}
           >
-            <option value="" className="bg-white dark:bg-zinc-950 text-brand-dark dark:text-white text-center">
-              Kategori: Semua
-            </option>
-            {categories.map((cat) => (
-              <option 
-                key={cat.category} 
-                value={cat.category}
-                className="bg-white dark:bg-zinc-950 text-brand-dark dark:text-white text-center"
-              >
-                Kategori: {cat.category}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-            <ChevronDown className="h-3.5 w-3.5 text-brand-gold group-hover:scale-105 transition-transform" />
+            <div className="overflow-hidden">
+              <div className="flex flex-col items-center justify-center gap-1 py-3 bg-brand-cream/15 dark:bg-black/10 border-t border-brand-wood/5 dark:border-zinc-800/30">
+                <button
+                  type="button"
+                  onClick={() => {
+                    router.push(buildUrl("", undefined, undefined));
+                    setOpenSection(null);
+                  }}
+                  className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                    !category 
+                      ? "text-brand-gold font-bold" 
+                      : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
+                  }`}
+                >
+                  Semua Kategori
+                </button>
+                {categories.map((cat) => {
+                  const isActive = category === cat.category;
+                  return (
+                    <button
+                      key={cat.category}
+                      type="button"
+                      onClick={() => {
+                        router.push(buildUrl(cat.category, undefined, undefined));
+                        setOpenSection(null);
+                      }}
+                      className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                        isActive 
+                          ? "text-brand-gold font-bold" 
+                          : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
+                      }`}
+                    >
+                      {cat.category}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Material Dropdown */}
-        <div className="relative group w-full sm:w-[200px]">
-          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
+        {/* Material Accordion Box */}
+        <div className="w-full sm:w-[200px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
+          <button
+            type="button"
+            onClick={() => toggleSection("material")}
+            className="relative flex items-center justify-between w-full py-3 px-4 bg-transparent text-center font-serif text-base font-medium text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
+          >
             <Compass className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-          </div>
-          <select
-            value={material || ""}
-            onChange={(e) => router.push(buildUrl(undefined, undefined, e.target.value))}
-            className="w-full appearance-none bg-white dark:bg-zinc-950/60 border-0 rounded-full py-2.5 pl-10 pr-10 text-center font-serif text-base sm:text-lg font-medium text-brand-dark dark:text-white focus:outline-none cursor-pointer transition-colors hover:bg-white/95 dark:hover:bg-zinc-900/80"
+            <span className="flex-1 text-center select-none pl-2 pr-2 text-xs sm:text-sm">
+              Material: {currentMaterialLabel}
+            </span>
+            <ChevronDown className={`h-3.5 w-3.5 text-brand-gold shrink-0 transition-transform duration-300 ${
+              openSection === "material" ? "rotate-180" : "rotate-0"
+            }`} />
+          </button>
+
+          <div
+            className={`grid transition-all duration-300 ease-in-out ${
+              openSection === "material" ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            }`}
           >
-            <option value="" className="bg-white dark:bg-zinc-950 text-brand-dark dark:text-white text-center">
-              Material: Semua
-            </option>
-            {materials.map((m) => (
-              <option 
-                key={m.value} 
-                value={m.value}
-                className="bg-white dark:bg-zinc-950 text-brand-dark dark:text-white text-center"
-              >
-                Material: {m.label}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-            <ChevronDown className="h-3.5 w-3.5 text-brand-gold group-hover:scale-105 transition-transform" />
+            <div className="overflow-hidden">
+              <div className="flex flex-col items-center justify-center gap-1 py-3 bg-brand-cream/15 dark:bg-black/10 border-t border-brand-wood/5 dark:border-zinc-800/30">
+                <button
+                  type="button"
+                  onClick={() => {
+                    router.push(buildUrl(undefined, undefined, ""));
+                    setOpenSection(null);
+                  }}
+                  className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                    !material 
+                      ? "text-brand-gold font-bold" 
+                      : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
+                  }`}
+                >
+                  Semua Material
+                </button>
+                {materials.map((m) => {
+                  const isActive = (material || "").toLowerCase() === m.value.toLowerCase();
+                  return (
+                    <button
+                      key={m.value}
+                      type="button"
+                      onClick={() => {
+                        router.push(buildUrl(undefined, undefined, m.value));
+                        setOpenSection(null);
+                      }}
+                      className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                        isActive 
+                          ? "text-brand-gold font-bold" 
+                          : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
+                      }`}
+                    >
+                      {m.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Sort Dropdown */}
-        <div className="relative group w-full sm:w-[200px]">
-          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
-            <ArrowUpDown className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-          </div>
-          <select
-            value={currentSort}
-            onChange={(e) => router.push(buildUrl(undefined, e.target.value, undefined))}
-            className="w-full appearance-none bg-white dark:bg-zinc-950/60 border-0 rounded-full py-2.5 pl-10 pr-10 text-center font-serif text-base sm:text-lg font-medium text-brand-dark dark:text-white focus:outline-none cursor-pointer transition-colors hover:bg-white/95 dark:hover:bg-zinc-900/80"
+        {/* Sort Accordion Box */}
+        <div className="w-full sm:w-[200px] bg-brand-cream/10 dark:bg-zinc-900/10 border border-brand-wood/10 dark:border-zinc-800 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all">
+          <button
+            type="button"
+            onClick={() => toggleSection("sort")}
+            className="relative flex items-center justify-between w-full py-3 px-4 bg-transparent text-center font-serif text-base font-medium text-brand-dark dark:text-white cursor-pointer hover:bg-brand-cream/15 dark:hover:bg-zinc-900/30 transition-colors"
           >
-            {sortOptions.map((s) => (
-              <option 
-                key={s.value} 
-                value={s.value}
-                className="bg-white dark:bg-zinc-950 text-brand-dark dark:text-white text-center"
-              >
-                Urutkan: {s.label}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-            <ChevronDown className="h-3.5 w-3.5 text-brand-gold group-hover:scale-105 transition-transform" />
+            <ArrowUpDown className="h-3.5 w-3.5 text-brand-gold shrink-0" />
+            <span className="flex-1 text-center select-none pl-2 pr-2 text-xs sm:text-sm">
+              Urutkan: {currentSortLabel}
+            </span>
+            <ChevronDown className={`h-3.5 w-3.5 text-brand-gold shrink-0 transition-transform duration-300 ${
+              openSection === "sort" ? "rotate-180" : "rotate-0"
+            }`} />
+          </button>
+
+          <div
+            className={`grid transition-all duration-300 ease-in-out ${
+              openSection === "sort" ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            }`}
+          >
+            <div className="overflow-hidden">
+              <div className="flex flex-col items-center justify-center gap-1 py-3 bg-brand-cream/15 dark:bg-black/10 border-t border-brand-wood/5 dark:border-zinc-800/30">
+                {sortOptions.map((s) => {
+                  const isActive = currentSort === s.value;
+                  return (
+                    <button
+                      key={s.value}
+                      type="button"
+                      onClick={() => {
+                        router.push(buildUrl(undefined, s.value, undefined));
+                        setOpenSection(null);
+                      }}
+                      className={`w-full py-2 text-center font-serif text-xs sm:text-sm transition-colors cursor-pointer ${
+                        isActive 
+                          ? "text-brand-gold font-bold" 
+                          : "text-brand-dark/70 dark:text-brand-light/70 hover:text-brand-gold"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
