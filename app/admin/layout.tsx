@@ -141,7 +141,7 @@ export default function AdminLayout({
       </aside>
 
         {/* Main Content Area */}
-      <main className="flex-1 lg:ml-[280px] pt-16 lg:pt-0 min-w-0">
+      <main className="flex-1 lg:ml-[280px] pt-16 lg:pt-0 min-w-0 overflow-x-hidden w-full relative">
         <div className="w-full max-w-[1600px] mx-auto p-4 sm:p-8 lg:p-12 transition-all duration-300">
           {children}
         </div>

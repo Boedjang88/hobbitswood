@@ -87,8 +87,8 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="id" className={`${inter.variable} ${belleza.variable}`} suppressHydrationWarning>
-      <body className="bg-brand-light dark:bg-brand-dark text-brand-dark dark:text-brand-light transition-colors duration-300">
+    <html lang="id" className={`${inter.variable} ${belleza.variable} overflow-x-hidden`} suppressHydrationWarning>
+      <body className="bg-brand-light dark:bg-brand-dark text-brand-dark dark:text-brand-light transition-colors duration-300 overflow-x-hidden w-full relative">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           {children}
           <CartDrawer waNumber={waNumberClean} />

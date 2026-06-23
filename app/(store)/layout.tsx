@@ -31,7 +31,7 @@ export default async function StoreLayout({
   return (
     <>
       <Navbar customOrderLink={customOrderLink} waLink={`https://wa.me/${waNumberClean}`} />
-      <main>{children}</main>
+      <main className="overflow-x-hidden w-full relative">{children}</main>
       <FloatingCart />
 
       <footer className="border-t border-brand-wood/10 bg-brand-dark text-brand-light mt-16 md:mt-26">

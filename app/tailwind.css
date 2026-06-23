@@ -1242,6 +1242,9 @@
   .overflow-x-auto {
     overflow-x: auto;
   }
+  .overflow-x-hidden {
+    overflow-x: hidden;
+  }
   .overflow-y-auto {
     overflow-y: auto;
   }
@@ -4336,9 +4339,9 @@
       padding-top: calc(var(--spacing) * 20);
     }
   }
-  .md\:pt-24 {
+  .md\:pt-36 {
     @media (width >= 48rem) {
-      padding-top: calc(var(--spacing) * 24);
+      padding-top: calc(var(--spacing) * 36);
     }
   }
   .md\:text-left {
@@ -6019,6 +6022,10 @@
     }
   }
 }
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -6032,6 +6039,7 @@ body {
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   transition: background-color 0.3s, color 0.3s;
   letter-spacing: -0.01em;
+  position: relative;
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif), ui-serif, Georgia, serif;
